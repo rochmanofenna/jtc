@@ -1,0 +1,137 @@
+{
+  "common": {
+    "appName": "雅加达贸易通",
+    "search": "搜索产品...",
+    "searchPlaceholder": "搜索安全帽、手套、安全鞋...",
+    "viewAll": "查看全部",
+    "loadMore": "加载更多",
+    "noResults": "未找到结果",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "retry": "重试",
+    "back": "返回",
+    "home": "首页",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "close": "关闭",
+    "confirm": "确认",
+    "yes": "是",
+    "no": "否",
+    "all": "全部"
+  },
+  "nav": {
+    "home": "首页",
+    "products": "产品",
+    "categories": "分类",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "admin": "管理",
+    "dashboard": "控制台"
+  },
+  "hero": {
+    "title": "安全与工业设备 — 工厂直供",
+    "subtitle": "B2B采购平台，连接印尼买家与经过验证的中国工业供应商。安全装备、工具和建筑材料，工厂直供价格。",
+    "cta": "浏览目录",
+    "ctaWhatsApp": "通过WhatsApp联系"
+  },
+  "categories": {
+    "safety-helmets": "安全帽",
+    "masks-respirators": "口罩和呼吸器",
+    "body-harnesses": "安全带和防坠设备",
+    "reflective-vests": "反光安全背心",
+    "rainwear": "雨衣",
+    "protective-clothing": "防护服",
+    "gloves": "手套",
+    "safety-footwear": "安全鞋",
+    "welding-equipment": "电焊设备",
+    "life-safety": "救生设备",
+    "anti-static": "防静电设备",
+    "power-tools-battery": "锂电工具",
+    "power-tools-ac": "交流电动工具",
+    "cutting-grinding-discs": "切割片和磨光片",
+    "tapes-ties-packaging": "胶带和扎带",
+    "woven-products": "编织品",
+    "traffic-safety": "交通设施",
+    "site-equipment": "工地设备"
+  },
+  "product": {
+    "requestQuote": "请求报价",
+    "material": "材料",
+    "specifications": "规格",
+    "packaging": "包装",
+    "colors": "颜色",
+    "sizes": "尺寸",
+    "brand": "品牌",
+    "supplier": "供应商",
+    "relatedProducts": "相关产品",
+    "moq": "最低起订量",
+    "unit": "单位",
+    "verified": "已验证"
+  },
+  "whyUs": {
+    "title": "为什么选择我们",
+    "factoryVerified": {
+      "title": "工厂验证供应商",
+      "description": "每个供应商均由我们的团队在工厂现场验证。品质保证。"
+    },
+    "bilingual": {
+      "title": "多语言支持",
+      "description": "平台支持印尼语、英语和中文，实现无障碍沟通。"
+    },
+    "bulkPricing": {
+      "title": "批量价格",
+      "description": "大宗采购享受工厂直供价格。无多余中间商。"
+    }
+  },
+  "cta": {
+    "ready": "准备下单了吗？",
+    "readyDescription": "联系我们的团队获取最优报价。",
+    "whatsapp": "WhatsApp咨询",
+    "browseProducts": "浏览产品"
+  },
+  "filter": {
+    "title": "筛选",
+    "category": "分类",
+    "material": "材料",
+    "supplier": "供应商",
+    "clearAll": "清除所有筛选",
+    "sortBy": "排序",
+    "sortName": "名称",
+    "sortNewest": "最新",
+    "sortCategory": "分类"
+  },
+  "admin": {
+    "dashboard": "控制台",
+    "products": "产品",
+    "categories": "分类",
+    "suppliers": "供应商",
+    "addProduct": "添加产品",
+    "editProduct": "编辑产品",
+    "addCategory": "添加分类",
+    "addSupplier": "添加供应商",
+    "totalProducts": "产品总数",
+    "totalCategories": "分类总数",
+    "totalSuppliers": "供应商总数",
+    "active": "启用",
+    "inactive": "停用",
+    "actions": "操作",
+    "confirmDelete": "您确定要删除吗？",
+    "saved": "保存成功",
+    "deleted": "删除成功"
+  },
+  "footer": {
+    "description": "工业安全设备和工具B2B采购平台，产品直接来自中国工厂。",
+    "quickLinks": "快速链接",
+    "contactUs": "联系我们",
+    "copyright": "© 2026 雅加达贸易通。保留所有权利。",
+    "whatsapp": "WhatsApp"
+  },
+  "404": {
+    "title": "页面未找到",
+    "description": "抱歉，您访问的页面不存在。",
+    "backHome": "返回首页"
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "common": {
+    "appName": "Jakarta Trade Connect",
+    "search": "Cari produk...",
+    "searchPlaceholder": "Cari helm, sarung tangan, sepatu...",
+    "viewAll": "Lihat Semua",
+    "loadMore": "Muat Lebih",
+    "noResults": "Tidak ada hasil ditemukan",
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "retry": "Coba Lagi",
+    "back": "Kembali",
+    "home": "Beranda",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Ubah",
+    "add": "Tambah",
+    "close": "Tutup",
+    "confirm": "Konfirmasi",
+    "yes": "Ya",
+    "no": "Tidak",
+    "all": "Semua"
+  },
+  "nav": {
+    "home": "Beranda",
+    "products": "Produk",
+    "categories": "Kategori",
+    "about": "Tentang Kami",
+    "contact": "Hubungi Kami",
+    "admin": "Admin",
+    "dashboard": "Dashboard"
+  },
+  "hero": {
+    "title": "Alat Keselamatan & Industri — Langsung dari Pabrik",
+    "subtitle": "Platform pengadaan B2B yang menghubungkan pembeli Indonesia dengan pemasok industri Tiongkok terverifikasi. Peralatan keselamatan, alat, dan material konstruksi dengan harga langsung pabrik.",
+    "cta": "Jelajahi Katalog",
+    "ctaWhatsApp": "Hubungi via WhatsApp"
+  },
+  "categories": {
+    "safety-helmets": "Helm Safety",
+    "masks-respirators": "Masker & Respirator",
+    "body-harnesses": "Body Harness & Pelindung Jatuh",
+    "reflective-vests": "Rompi Safety Reflektif",
+    "rainwear": "Jas Hujan",
+    "protective-clothing": "Pakaian Pelindung",
+    "gloves": "Sarung Tangan",
+    "safety-footwear": "Sepatu Safety",
+    "welding-equipment": "Peralatan Las",
+    "life-safety": "Peralatan Penyelamatan",
+    "anti-static": "Anti Statis",
+    "power-tools-battery": "Perkakas Baterai",
+    "power-tools-ac": "Perkakas Listrik",
+    "cutting-grinding-discs": "Batu Potong & Gerinda",
+    "tapes-ties-packaging": "Lakban & Kabel Ties",
+    "woven-products": "Produk Anyaman",
+    "traffic-safety": "Fasilitas Lalu Lintas",
+    "site-equipment": "Peralatan Lokasi"
+  },
+  "product": {
+    "requestQuote": "Minta Penawaran",
+    "material": "Material",
+    "specifications": "Spesifikasi",
+    "packaging": "Kemasan",
+    "colors": "Warna",
+    "sizes": "Ukuran",
+    "brand": "Merek",
+    "supplier": "Pemasok",
+    "relatedProducts": "Produk Terkait",
+    "moq": "Minimum Order",
+    "unit": "Satuan",
+    "verified": "Terverifikasi"
+  },
+  "whyUs": {
+    "title": "Mengapa Memilih Kami",
+    "factoryVerified": {
+      "title": "Pemasok Terverifikasi Pabrik",
+      "description": "Setiap pemasok diverifikasi langsung di pabrik oleh tim kami. Kualitas terjamin."
+    },
+    "bilingual": {
+      "title": "Dukungan Multibahasa",
+      "description": "Platform tersedia dalam Bahasa Indonesia, English, dan 中文 untuk komunikasi tanpa hambatan."
+    },
+    "bulkPricing": {
+      "title": "Harga Grosir",
+      "description": "Harga langsung pabrik untuk pembelian dalam jumlah besar. Tanpa perantara berlebih."
+    }
+  },
+  "cta": {
+    "ready": "Siap untuk memesan?",
+    "readyDescription": "Hubungi tim kami untuk penawaran harga terbaik.",
+    "whatsapp": "Chat WhatsApp",
+    "browseProducts": "Lihat Produk"
+  },
+  "filter": {
+    "title": "Filter",
+    "category": "Kategori",
+    "material": "Material",
+    "supplier": "Pemasok",
+    "clearAll": "Hapus Semua Filter",
+    "sortBy": "Urutkan",
+    "sortName": "Nama",
+    "sortNewest": "Terbaru",
+    "sortCategory": "Kategori"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "products": "Produk",
+    "categories": "Kategori",
+    "suppliers": "Pemasok",
+    "addProduct": "Tambah Produk",
+    "editProduct": "Ubah Produk",
+    "addCategory": "Tambah Kategori",
+    "addSupplier": "Tambah Pemasok",
+    "totalProducts": "Total Produk",
+    "totalCategories": "Total Kategori",
+    "totalSuppliers": "Total Pemasok",
+    "active": "Aktif",
+    "inactive": "Nonaktif",
+    "actions": "Aksi",
+    "confirmDelete": "Apakah Anda yakin ingin menghapus ini?",
+    "saved": "Berhasil disimpan",
+    "deleted": "Berhasil dihapus"
+  },
+  "footer": {
+    "description": "Platform pengadaan B2B untuk peralatan keselamatan industri dan alat-alat langsung dari pabrik Tiongkok.",
+    "quickLinks": "Tautan Cepat",
+    "contactUs": "Hubungi Kami",
+    "copyright": "© 2026 Jakarta Trade Connect. Hak cipta dilindungi.",
+    "whatsapp": "WhatsApp"
+  },
+  "404": {
+    "title": "Halaman Tidak Ditemukan",
+    "description": "Maaf, halaman yang Anda cari tidak ada.",
+    "backHome": "Kembali ke Beranda"
+  }
+}
