@@ -1,65 +1,198 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ShieldCheck, Languages, BadgeDollarSign, MessageCircle } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { prisma } from "@/lib/prisma";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { WHATSAPP_NUMBER } from "@/lib/constants";
+import { formatWhatsAppUrl } from "@/lib/utils";
+import { getIcon } from "@/lib/icons";
+import { CATEGORY_ICONS } from "@/lib/constants";
 
-export default function Home() {
+export default async function HomePage() {
+  const t = await getTranslations();
+
+  const categories = await prisma.category.findMany({
+    where: { parentId: null },
+    include: { _count: { select: { products: true } } },
+    orderBy: { sortOrder: "asc" },
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1">
+        {/* ── Hero ────────────────────────────────────────────────────── */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-navy-900 to-navy-950">
+          {/* Grid pattern overlay */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px)",
+              backgroundSize: "60px 60px",
+            }}
+          />
+          <div className="container-wide relative py-20 lg:py-32">
+            <div className="mx-auto max-w-3xl text-center">
+              <h1 className="font-heading text-4xl font-bold text-white lg:text-6xl">
+                {t("hero.title")}
+              </h1>
+              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-navy-200">
+                {t("hero.subtitle")}
+              </p>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Button
+                  className="h-11 bg-accent px-6 text-accent-foreground hover:bg-accent/90"
+                  size="lg"
+                  render={<Link href="/products" />}
+                >
+                  {t("hero.cta")}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-11 border-white/30 px-6 text-white hover:bg-white/10 hover:text-white"
+                  size="lg"
+                  render={
+                    <a
+                      href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
+                  }
+                >
+                  <MessageCircle className="size-4" />
+                  {t("hero.ctaWhatsApp")}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Categories Grid ────────────────────────────────────────── */}
+        <section className="py-16 lg:py-24">
+          <div className="container-wide">
+            <h2 className="font-heading text-2xl font-bold text-foreground lg:text-3xl">
+              {t("nav.categories")}
+            </h2>
+            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+              {categories.map((category: any) => {
+                const iconName = CATEGORY_ICONS[category.slug] || "Package";
+                const Icon = getIcon(iconName);
+                return (
+                  <Link
+                    key={category.id}
+                    href={`/categories/${category.slug}`}
+                    className="group/cat block"
+                  >
+                    <Card className="h-full text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+                      <CardContent className="flex flex-col items-center gap-3 py-6">
+                        <div className="flex size-12 items-center justify-center rounded-full bg-accent/10 text-accent transition-colors group-hover/cat:bg-accent/20">
+                          <Icon className="size-6" />
+                        </div>
+                        <h3 className="font-heading text-sm font-semibold leading-tight">
+                          {category.name}
+                        </h3>
+                        <Badge variant="secondary" className="text-xs">
+                          {category._count.products}{" "}
+                          {category._count.products === 1
+                            ? "product"
+                            : "products"}
+                        </Badge>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Why Us ─────────────────────────────────────────────────── */}
+        <section className="bg-muted/50 py-16 lg:py-24">
+          <div className="container-wide">
+            <h2 className="text-center font-heading text-2xl font-bold text-foreground lg:text-3xl">
+              {t("whyUs.title")}
+            </h2>
+            <div className="mt-10 grid gap-6 sm:grid-cols-3">
+              {[
+                {
+                  icon: ShieldCheck,
+                  titleKey: "whyUs.factoryVerified.title" as const,
+                  descKey: "whyUs.factoryVerified.description" as const,
+                },
+                {
+                  icon: Languages,
+                  titleKey: "whyUs.bilingual.title" as const,
+                  descKey: "whyUs.bilingual.description" as const,
+                },
+                {
+                  icon: BadgeDollarSign,
+                  titleKey: "whyUs.bulkPricing.title" as const,
+                  descKey: "whyUs.bulkPricing.description" as const,
+                },
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Card key={item.titleKey}>
+                    <CardContent className="flex flex-col items-center gap-4 py-8 text-center">
+                      <div className="flex size-14 items-center justify-center rounded-full bg-accent/10 text-accent">
+                        <Icon className="size-7" />
+                      </div>
+                      <h3 className="font-heading text-lg font-semibold">
+                        {t(item.titleKey)}
+                      </h3>
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        {t(item.descKey)}
+                      </p>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ── CTA Banner ─────────────────────────────────────────────── */}
+        <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-16">
+          <div className="container-wide text-center">
+            <h2 className="font-heading text-3xl font-bold text-white lg:text-4xl">
+              {t("cta.ready")}
+            </h2>
+            <p className="mt-3 text-lg text-white/90">
+              {t("cta.readyDescription")}
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button
+                className="h-11 bg-white px-6 text-orange-600 hover:bg-white/90"
+                size="lg"
+                render={
+                  <a
+                    href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                }
+              >
+                <MessageCircle className="size-4" />
+                {t("cta.whatsapp")}
+              </Button>
+              <Button
+                variant="outline"
+                className="h-11 border-white/30 px-6 text-white hover:bg-white/10 hover:text-white"
+                size="lg"
+                render={<Link href="/products" />}
+              >
+                {t("cta.browseProducts")}
+              </Button>
+            </div>
+          </div>
+        </section>
       </main>
+      <Footer />
     </div>
   );
 }
