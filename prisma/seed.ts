@@ -1,6 +1,8 @@
 import { PrismaClient } from '../src/generated/prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const prisma = new PrismaClient({});
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+const prisma = new PrismaClient({ adapter } as any);
 
 async function main() {
   console.log('Seeding Jakarta Trade Connect database...');
@@ -67,7 +69,7 @@ async function main() {
     nameCn: '口罩',
     slug: 'masks-respirators',
     icon: 'Shield',
-    sortOrder: 2,
+    sortOrder: 4,
   });
 
   const catBodyHarnesses = await upsertCategory({
@@ -76,7 +78,7 @@ async function main() {
     nameCn: '安全带',
     slug: 'body-harnesses',
     icon: 'Anchor',
-    sortOrder: 3,
+    sortOrder: 6,
   });
 
   const catReflectiveVests = await upsertCategory({
@@ -85,7 +87,7 @@ async function main() {
     nameCn: '反光衣',
     slug: 'reflective-vests',
     icon: 'Eye',
-    sortOrder: 4,
+    sortOrder: 5,
   });
 
   const catRainwear = await upsertCategory({
@@ -94,7 +96,7 @@ async function main() {
     nameCn: '雨衣',
     slug: 'rainwear',
     icon: 'CloudRain',
-    sortOrder: 5,
+    sortOrder: 8,
   });
 
   const catProtectiveClothing = await upsertCategory({
@@ -103,7 +105,7 @@ async function main() {
     nameCn: '防护服',
     slug: 'protective-clothing',
     icon: 'Shirt',
-    sortOrder: 6,
+    sortOrder: 7,
   });
 
   const catGloves = await upsertCategory({
@@ -112,7 +114,7 @@ async function main() {
     nameCn: '手套',
     slug: 'gloves',
     icon: 'Hand',
-    sortOrder: 7,
+    sortOrder: 2,
   });
 
   const catSafetyFootwear = await upsertCategory({
@@ -121,7 +123,7 @@ async function main() {
     nameCn: '鞋子',
     slug: 'safety-footwear',
     icon: 'Footprints',
-    sortOrder: 8,
+    sortOrder: 3,
   });
 
   const catWeldingEquipment = await upsertCategory({
@@ -148,7 +150,7 @@ async function main() {
     nameCn: '防静电',
     slug: 'anti-static',
     icon: 'Zap',
-    sortOrder: 11,
+    sortOrder: 14,
   });
 
   const catPowerToolsBattery = await upsertCategory({
@@ -157,7 +159,7 @@ async function main() {
     nameCn: '锂电工具',
     slug: 'power-tools-battery',
     icon: 'BatteryCharging',
-    sortOrder: 12,
+    sortOrder: 11,
   });
 
   const catPowerToolsAC = await upsertCategory({
@@ -166,7 +168,7 @@ async function main() {
     nameCn: '交流电动工具',
     slug: 'power-tools-ac',
     icon: 'Plug',
-    sortOrder: 13,
+    sortOrder: 12,
   });
 
   const catCuttingGrindingDiscs = await upsertCategory({
@@ -175,7 +177,7 @@ async function main() {
     nameCn: '切割片磨光片',
     slug: 'cutting-grinding-discs',
     icon: 'Disc3',
-    sortOrder: 14,
+    sortOrder: 13,
   });
 
   const catTapesTiesPackaging = await upsertCategory({
@@ -193,7 +195,7 @@ async function main() {
     nameCn: '编织品',
     slug: 'woven-products',
     icon: 'Grid3x3',
-    sortOrder: 16,
+    sortOrder: 17,
   });
 
   const catTrafficSafety = await upsertCategory({
@@ -202,7 +204,7 @@ async function main() {
     nameCn: '交通设施',
     slug: 'traffic-safety',
     icon: 'Construction',
-    sortOrder: 17,
+    sortOrder: 16,
   });
 
   const catSiteEquipment = await upsertCategory({
