@@ -1,37 +1,28 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { getIcon } from "@/lib/icons";
-import { CATEGORY_ICONS } from "@/lib/constants";
 
 interface CategoryCardProps {
   category: any;
+  productCount?: number;
   locale?: string;
 }
 
-export function CategoryCard({ category, locale }: CategoryCardProps) {
-  const iconName = category.icon || CATEGORY_ICONS[category.slug] || "Package";
-  const Icon = getIcon(iconName);
-  const productCount = category._count?.products ?? 0;
+export function CategoryCard({ category, productCount, locale }: CategoryCardProps) {
+  const Icon = getIcon(category.icon);
+  const count = productCount ?? category._count?.products ?? 0;
 
   return (
-    <Link
-      href={`/categories/${category.slug}`}
-      className="group block min-h-[120px] rounded-xl border bg-card p-5 transition-all duration-200 hover:border-b-2 hover:border-b-accent hover:shadow-md"
-    >
-      <div className="flex flex-col gap-3">
-        <div className="flex items-start justify-between">
-          <div className="rounded-lg bg-primary/10 p-2.5">
-            <Icon className="size-5 text-primary" />
-          </div>
-          {productCount > 0 && (
-            <Badge variant="secondary" className="text-xs">
-              {productCount}
-            </Badge>
-          )}
+    <Link href={`/categories/${category.slug}`}>
+      <div className="group rounded-xl border border-border bg-card p-5 text-center transition-all duration-200 hover:shadow-lg hover:border-accent/40 hover:-translate-y-1 cursor-pointer">
+        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent transition-colors group-hover:bg-accent/20">
+          <Icon className="h-6 w-6" />
         </div>
-        <h3 className="font-heading text-sm font-semibold leading-snug">
-          {category.name}
+        <h3 className="font-heading text-sm font-semibold mb-1">
+          {locale === "cn" && category.nameCn ? category.nameCn : category.name}
         </h3>
+        <p className="text-xs text-muted-foreground">
+          {count} {count === 1 ? "product" : "products"}
+        </p>
       </div>
     </Link>
   );
