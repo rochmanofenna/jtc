@@ -5,20 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { ProductImages } from "@/components/catalog/product-images";
 import { ProductGrid } from "@/components/catalog/product-grid";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  MessageCircle,
-  ChevronRight,
-  Package,
-  ShieldCheck,
-} from "lucide-react";
-import { WHATSAPP_NUMBER } from "@/lib/constants";
-import {
-  formatWhatsAppUrl,
-  getWhatsAppQuoteMessage,
-} from "@/lib/utils";
+import { QuoteButton } from "@/components/catalog/quote-button";
 
 export async function generateMetadata({
   params,
@@ -97,35 +84,44 @@ export default async function ProductDetailPage({
     take: 4,
   });
 
-  const whatsAppUrl = formatWhatsAppUrl(
-    WHATSAPP_NUMBER,
-    getWhatsAppQuoteMessage(product.name, "en")
-  );
+  // Build specs list
+  const specs: Array<{ label: string; value: string }> = [];
+  if (product.material)
+    specs.push({ label: t("product.material"), value: product.material });
+  if (product.specifications)
+    specs.push({
+      label: t("product.specifications"),
+      value: product.specifications,
+    });
+  if (product.packaging)
+    specs.push({ label: t("product.packaging"), value: product.packaging });
+  if (product.moq)
+    specs.push({
+      label: t("product.moq"),
+      value: `${product.moq} ${product.unit || "pcs"}`,
+    });
+  if (product.unit)
+    specs.push({ label: t("product.unit"), value: product.unit });
+  if (product.brandName)
+    specs.push({ label: t("product.brand"), value: product.brandName });
+
+  const colors: string[] = product.colors ?? [];
+  const sizes: string[] = product.sizes ?? [];
 
   return (
     <div className="container-wide py-8">
-      {/* ── Breadcrumb ──────────────────────────────────────────── */}
-      <nav className="mb-6 flex items-center gap-1.5 text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-foreground">
-          {t("nav.home")}
-        </Link>
-        <ChevronRight className="size-3.5" />
-        <Link href="/products" className="hover:text-foreground">
-          {t("nav.products")}
-        </Link>
-        <ChevronRight className="size-3.5" />
+      {/* Back link */}
+      <nav className="mb-8">
         <Link
           href={`/categories/${product.category.slug}`}
-          className="hover:text-foreground"
+          className="font-body text-sm text-gray-500 transition-colors hover:text-gray-900"
         >
-          {product.category.name}
+          &larr; Back to {product.category.name}
         </Link>
-        <ChevronRight className="size-3.5" />
-        <span className="text-foreground">{product.name}</span>
       </nav>
 
-      {/* ── Product detail grid ─────────────────────────────────── */}
-      <div className="grid gap-8 lg:grid-cols-2">
+      {/* Two-column product layout */}
+      <div className="grid gap-10 lg:grid-cols-2">
         {/* Left: images */}
         <div>
           <ProductImages
@@ -137,175 +133,134 @@ export default async function ProductDetailPage({
           />
         </div>
 
-        {/* Right: info */}
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <h1 className="font-heading text-2xl font-bold lg:text-3xl">
-              {product.name}
-            </h1>
-            {product.nameCn && (
-              <p className="text-lg text-muted-foreground">{product.nameCn}</p>
-            )}
-          </div>
+        {/* Right: details */}
+        <div>
+          {/* Category label */}
+          <p className="font-display text-[10px] font-semibold uppercase tracking-[0.15em] text-amber-600 mb-2">
+            {product.category.name}
+          </p>
 
-          {/* Badges row */}
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary">
-              <Package className="mr-1 size-3" />
-              {product.category.name}
-            </Badge>
-            {product.brandName && (
-              <Badge variant="outline">{product.brandName}</Badge>
-            )}
-            {product.supplier.verificationStatus === "VERIFIED" && (
-              <Badge className="bg-emerald-500/10 text-emerald-700">
-                <ShieldCheck className="mr-1 size-3" />
-                {t("product.verified")}
-              </Badge>
-            )}
-          </div>
+          {/* Product name */}
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
+            {product.name}
+          </h1>
+
+          {/* Chinese name */}
+          {product.nameCn && (
+            <p className="font-body text-lg text-gray-400 mt-1">
+              {product.nameCn}
+            </p>
+          )}
 
           {/* Description */}
           {product.description && (
-            <p className="leading-relaxed text-muted-foreground">
+            <p className="font-body text-sm text-gray-500 leading-relaxed mt-4">
               {product.description}
             </p>
           )}
           {product.descriptionCn && (
-            <p className="leading-relaxed text-muted-foreground">
+            <p className="font-body text-sm text-gray-400 leading-relaxed mt-2">
               {product.descriptionCn}
             </p>
           )}
 
-          {/* Specs card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("product.specifications")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-                {product.material && (
-                  <>
-                    <dt className="font-medium text-muted-foreground">
-                      {t("product.material")}
-                    </dt>
-                    <dd>{product.material}</dd>
-                  </>
-                )}
-                {product.specifications && (
-                  <>
-                    <dt className="font-medium text-muted-foreground">
-                      {t("product.specifications")}
-                    </dt>
-                    <dd>{product.specifications}</dd>
-                  </>
-                )}
-                {product.packaging && (
-                  <>
-                    <dt className="font-medium text-muted-foreground">
-                      {t("product.packaging")}
-                    </dt>
-                    <dd>{product.packaging}</dd>
-                  </>
-                )}
-                {product.moq && (
-                  <>
-                    <dt className="font-medium text-muted-foreground">
-                      {t("product.moq")}
-                    </dt>
-                    <dd>
-                      {product.moq} {product.unit || "pcs"}
-                    </dd>
-                  </>
-                )}
-                {product.colors.length > 0 && (
-                  <>
-                    <dt className="font-medium text-muted-foreground">
-                      {t("product.colors")}
-                    </dt>
-                    <dd className="flex flex-wrap gap-1">
-                      {product.colors.map((c: any) => (
-                        <Badge key={c} variant="outline" className="text-xs">
-                          {c}
-                        </Badge>
-                      ))}
-                    </dd>
-                  </>
-                )}
-                {product.sizes.length > 0 && (
-                  <>
-                    <dt className="font-medium text-muted-foreground">
-                      {t("product.sizes")}
-                    </dt>
-                    <dd className="flex flex-wrap gap-1">
-                      {product.sizes.map((s: any) => (
-                        <Badge key={s} variant="outline" className="text-xs">
-                          {s}
-                        </Badge>
-                      ))}
-                    </dd>
-                  </>
-                )}
-              </dl>
-            </CardContent>
-          </Card>
+          {/* Separator */}
+          <div className="w-10 h-0.5 bg-amber-500 my-6" />
+
+          {/* Specifications */}
+          {specs.length > 0 && (
+            <div className="mb-6">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 mb-4">
+                {t("product.specifications")}
+              </p>
+              <table className="w-full text-sm">
+                <tbody>
+                  {specs.map((spec, i) => (
+                    <tr key={spec.label} className={i % 2 === 0 ? "bg-gray-50" : ""}>
+                      <td className="font-body text-sm font-medium text-gray-500 w-32 py-2.5 px-3">
+                        {spec.label}
+                      </td>
+                      <td className="font-body text-sm text-gray-900 py-2.5 px-3">
+                        {spec.value}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Colors */}
+          {colors.length > 0 && (
+            <div className="mb-6">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 mb-3">
+                {t("product.colors")}
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {colors.map((color: string) => (
+                  <span
+                    key={color}
+                    className="rounded-sm bg-gray-100 text-gray-700 text-xs px-2 py-1 font-body"
+                  >
+                    {color}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Sizes */}
+          {sizes.length > 0 && (
+            <div className="mb-6">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 mb-3">
+                {t("product.sizes")}
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {sizes.map((size: string) => (
+                  <span
+                    key={size}
+                    className="rounded-sm bg-gray-100 text-gray-700 text-xs px-2 py-1 font-body"
+                  >
+                    {size}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Supplier info */}
-          <Card size="sm">
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <p className="text-xs font-medium text-muted-foreground">
-                    {t("product.supplier")}
-                  </p>
-                  <p className="font-heading font-semibold">
-                    {product.supplier.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {product.supplier.country === "CN" ? "China" : "Indonesia"}
-                  </p>
-                </div>
-                {product.supplier.verificationStatus === "VERIFIED" && (
-                  <ShieldCheck className="size-5 text-emerald-600" />
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-8">
+            <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500">
+              {t("product.supplier")}
+            </p>
+            <p className="font-body text-sm text-gray-900 mt-1">
+              {product.supplier.name}
+              {product.supplier.country && (
+                <span className="text-gray-400 ml-1.5">
+                  {product.supplier.country === "CN" ? "China" : "Indonesia"}
+                </span>
+              )}
+            </p>
+          </div>
 
-          {/* CTA */}
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
-              className="h-11 flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
-              size="lg"
-              render={
-                <a
-                  href={whatsAppUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />
-              }
-            >
-              <MessageCircle className="size-4" />
-              {t("product.requestQuote")}
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-11"
-              render={<Link href="/products" />}
-            >
-              {t("common.back")}
-            </Button>
+          {/* CTA - desktop inline, mobile full width */}
+          <div className="hidden sm:block">
+            <QuoteButton productName={product.name} />
           </div>
         </div>
       </div>
 
-      {/* ── Related products ────────────────────────────────────── */}
+      {/* Mobile sticky bottom bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gray-200 p-4 sm:hidden">
+        <QuoteButton productName={product.name} className="w-full" />
+      </div>
+
+      {/* Related products */}
       {relatedProducts.length > 0 && (
-        <section className="mt-16">
-          <h2 className="mb-6 font-heading text-xl font-bold">
+        <section className="border-t border-gray-200 mt-16 pt-12">
+          <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-amber-600 mb-6">
             {t("product.relatedProducts")}
-          </h2>
+          </p>
           <ProductGrid products={relatedProducts} />
         </section>
       )}

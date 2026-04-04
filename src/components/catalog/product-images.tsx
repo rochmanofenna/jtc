@@ -16,8 +16,8 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-muted">
-        <Package className="size-16 text-muted-foreground/30" />
+      <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-gray-100">
+        <Package className="size-16 text-gray-400/30" />
       </div>
     );
   }
@@ -27,7 +27,7 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
   return (
     <div className="space-y-3">
       {/* Main image */}
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-muted">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
@@ -42,7 +42,7 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
               alt={activeImage.altText || productName}
               fill
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 60vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
               priority
             />
           </motion.div>
@@ -57,10 +57,10 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
               key={index}
               onClick={() => setActiveIndex(index)}
               className={cn(
-                "relative size-16 shrink-0 overflow-hidden rounded-md ring-2 transition-all",
+                "relative h-16 w-16 shrink-0 overflow-hidden rounded-sm transition-all",
                 index === activeIndex
-                  ? "ring-accent"
-                  : "ring-transparent hover:ring-muted-foreground/30"
+                  ? "ring-2 ring-amber-500"
+                  : "ring-1 ring-gray-200 hover:ring-gray-300"
               )}
             >
               <Image

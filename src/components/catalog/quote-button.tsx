@@ -1,10 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { MessageCircle } from "lucide-react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { cn, formatWhatsAppUrl, getWhatsAppQuoteMessage } from "@/lib/utils";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 
@@ -16,7 +13,6 @@ interface QuoteButtonProps {
 export function QuoteButton({ productName, className }: QuoteButtonProps) {
   const t = useTranslations("product");
   const locale = useLocale();
-  const hasAnimated = useRef(false);
 
   function handleClick() {
     const message = getWhatsAppQuoteMessage(productName, locale);
@@ -25,31 +21,20 @@ export function QuoteButton({ productName, className }: QuoteButtonProps) {
   }
 
   return (
-    <motion.div
-      initial={!hasAnimated.current ? { scale: 1 } : false}
-      animate={
-        !hasAnimated.current
-          ? {
-              scale: [1, 1.04, 1],
-              transition: { duration: 0.6, delay: 0.5 },
-            }
-          : {}
-      }
-      onAnimationComplete={() => {
-        hasAnimated.current = true;
-      }}
+    <button
+      onClick={handleClick}
+      className={cn(
+        "inline-flex items-center justify-center gap-2",
+        "h-12 px-8 rounded-sm",
+        "bg-amber-500 text-[#0a0f1a] hover:bg-amber-400",
+        "font-display text-sm font-semibold uppercase tracking-wide",
+        "transition-colors cursor-pointer",
+        "w-full sm:w-auto",
+        className
+      )}
     >
-      <Button
-        size="lg"
-        className={cn(
-          "bg-accent text-accent-foreground hover:bg-accent/90",
-          className
-        )}
-        onClick={handleClick}
-      >
-        <MessageCircle className="size-4" />
-        {t("requestQuote")}
-      </Button>
-    </motion.div>
+      <MessageCircle className="size-4" />
+      {t("requestQuote")}
+    </button>
   );
 }

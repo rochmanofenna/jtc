@@ -1,8 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Shield } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { ProductImages } from "@/components/catalog/product-images";
 import { QuoteButton } from "@/components/catalog/quote-button";
 
@@ -19,6 +17,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
     { label: t("packaging"), value: product.packaging },
     { label: t("moq"), value: product.moq },
     { label: t("unit"), value: product.unit },
+    { label: t("brand"), value: product.brandName },
   ].filter((s) => s.value);
 
   const colors: string[] = product.colors ?? [];
@@ -26,9 +25,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
   return (
     <div>
-      <div className="grid gap-8 lg:grid-cols-5">
+      <div className="grid gap-10 lg:grid-cols-2">
         {/* Images */}
-        <div className="lg:col-span-3">
+        <div>
           <ProductImages
             images={product.images ?? []}
             productName={product.name}
@@ -36,35 +35,45 @@ export function ProductDetail({ product }: ProductDetailProps) {
         </div>
 
         {/* Details */}
-        <div className="space-y-6 lg:col-span-2">
-          {/* Name */}
-          <div>
-            <h1 className="font-heading text-2xl font-bold leading-tight">
-              {product.name}
-            </h1>
-            {product.nameCn && (
-              <p className="mt-1 text-sm text-muted-foreground">
-                {product.nameCn}
-              </p>
-            )}
-          </div>
-
-          {/* Brand */}
-          {product.brandName && (
-            <Badge variant="secondary">{t("brand")}: {product.brandName}</Badge>
+        <div>
+          {/* Category label */}
+          {product.category?.name && (
+            <p className="font-display text-[10px] font-semibold uppercase tracking-[0.15em] text-amber-600 mb-2">
+              {product.category.name}
+            </p>
           )}
 
-          {/* Specs table */}
+          {/* Product name */}
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
+            {product.name}
+          </h1>
+
+          {/* Chinese name */}
+          {product.nameCn && (
+            <p className="font-body text-lg text-gray-400 mt-1">
+              {product.nameCn}
+            </p>
+          )}
+
+          {/* Separator */}
+          <div className="w-10 h-0.5 bg-amber-500 my-6" />
+
+          {/* Specifications */}
           {specs.length > 0 && (
-            <div className="overflow-hidden rounded-lg border">
+            <div className="mb-6">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 mb-4">
+                {t("specifications")}
+              </p>
               <table className="w-full text-sm">
                 <tbody>
                   {specs.map((spec, i) => (
-                    <tr key={spec.label} className={i > 0 ? "border-t" : ""}>
-                      <td className="bg-muted/50 px-3 py-2 font-medium text-muted-foreground">
+                    <tr key={spec.label} className={i % 2 === 0 ? "bg-gray-50" : ""}>
+                      <td className="font-body text-sm font-medium text-gray-500 w-32 py-2.5 px-3">
                         {spec.label}
                       </td>
-                      <td className="px-3 py-2">{spec.value}</td>
+                      <td className="font-body text-sm text-gray-900 py-2.5 px-3">
+                        {spec.value}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -74,15 +83,18 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
           {/* Colors */}
           {colors.length > 0 && (
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-muted-foreground">
+            <div className="mb-6">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 mb-3">
                 {t("colors")}
-              </h3>
+              </p>
               <div className="flex flex-wrap gap-1.5">
                 {colors.map((color) => (
-                  <Badge key={color} variant="secondary">
+                  <span
+                    key={color}
+                    className="rounded-sm bg-gray-100 text-gray-700 text-xs px-2 py-1 font-body"
+                  >
                     {color}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </div>
@@ -90,15 +102,18 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
           {/* Sizes */}
           {sizes.length > 0 && (
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-muted-foreground">
+            <div className="mb-6">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 mb-3">
                 {t("sizes")}
-              </h3>
+              </p>
               <div className="flex flex-wrap gap-1.5">
                 {sizes.map((size) => (
-                  <Badge key={size} variant="outline">
+                  <span
+                    key={size}
+                    className="rounded-sm bg-gray-100 text-gray-700 text-xs px-2 py-1 font-body"
+                  >
                     {size}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </div>
@@ -106,27 +121,25 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
           {/* Supplier */}
           {product.supplier && (
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">{t("supplier")}:</span>
-              <span className="font-medium">{product.supplier.name}</span>
-              {product.supplier.verified && (
-                <span className="inline-flex items-center gap-1 text-accent">
-                  <Shield className="size-3.5" />
-                  <span className="text-xs font-medium">{t("verified")}</span>
-                </span>
-              )}
+            <div className="mb-8">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500">
+                {t("supplier")}
+              </p>
+              <p className="font-body text-sm text-gray-900 mt-1">
+                {product.supplier.name}
+              </p>
             </div>
           )}
 
           {/* Desktop quote button */}
-          <div className="hidden lg:block">
-            <QuoteButton productName={product.name} className="w-full" />
+          <div className="hidden sm:block">
+            <QuoteButton productName={product.name} />
           </div>
         </div>
       </div>
 
       {/* Mobile sticky bottom bar */}
-      <div className="fixed bottom-0 left-0 z-40 w-full border-t bg-background p-3 lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gray-200 p-4 sm:hidden">
         <QuoteButton productName={product.name} className="w-full" />
       </div>
     </div>
