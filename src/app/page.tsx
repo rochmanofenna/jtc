@@ -6,20 +6,30 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { formatWhatsAppUrl } from "@/lib/utils";
-import { getIcon } from "@/lib/icons";
-import { CATEGORY_ICONS } from "@/lib/constants";
+import { CategoryCard } from "@/components/catalog/category-card";
 
 export default async function HomePage() {
   const t = await getTranslations();
 
-  const categories = await prisma.category.findMany({
+  // Get parent categories with their children
+  const categoriesRaw = await prisma.category.findMany({
     where: { parentId: null },
-    include: { _count: { select: { products: true } } },
+    include: { children: { select: { id: true } } },
     orderBy: { sortOrder: "asc" },
   });
+
+  // Count products across parent + all children for each
+  const categoriesWithCounts = await Promise.all(
+    categoriesRaw.map(async (category) => {
+      const categoryIds = [category.id, ...category.children.map((c: any) => c.id)];
+      const productCount = await prisma.product.count({
+        where: { categoryId: { in: categoryIds }, isActive: true },
+      });
+      return { ...category, productCount };
+    })
+  );
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -79,34 +89,13 @@ export default async function HomePage() {
               {t("nav.categories")}
             </h2>
             <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-              {categories.map((category: any) => {
-                const iconName = CATEGORY_ICONS[category.slug] || "Package";
-                const Icon = getIcon(iconName);
-                return (
-                  <Link
-                    key={category.id}
-                    href={`/categories/${category.slug}`}
-                    className="group/cat block"
-                  >
-                    <Card className="h-full text-center transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
-                      <CardContent className="flex flex-col items-center gap-3 py-6">
-                        <div className="flex size-12 items-center justify-center rounded-full bg-accent/10 text-accent transition-colors group-hover/cat:bg-accent/20">
-                          <Icon className="size-6" />
-                        </div>
-                        <h3 className="font-heading text-sm font-semibold leading-tight">
-                          {category.name}
-                        </h3>
-                        <Badge variant="secondary" className="text-xs">
-                          {category._count.products}{" "}
-                          {category._count.products === 1
-                            ? "product"
-                            : "products"}
-                        </Badge>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                );
-              })}
+              {categoriesWithCounts.map((category: any) => (
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  productCount={category.productCount}
+                />
+              ))}
             </div>
           </div>
         </section>
@@ -121,18 +110,18 @@ export default async function HomePage() {
               {[
                 {
                   icon: ShieldCheck,
-                  titleKey: "whyUs.factoryVerified.title" as const,
-                  descKey: "whyUs.factoryVerified.description" as const,
+                  titleKey: "whyUs.verified.title" as const,
+                  descKey: "whyUs.verified.description" as const,
                 },
                 {
                   icon: Languages,
-                  titleKey: "whyUs.bilingual.title" as const,
-                  descKey: "whyUs.bilingual.description" as const,
+                  titleKey: "whyUs.multilingual.title" as const,
+                  descKey: "whyUs.multilingual.description" as const,
                 },
                 {
                   icon: BadgeDollarSign,
-                  titleKey: "whyUs.bulkPricing.title" as const,
-                  descKey: "whyUs.bulkPricing.description" as const,
+                  titleKey: "whyUs.pricing.title" as const,
+                  descKey: "whyUs.pricing.description" as const,
                 },
               ].map((item) => {
                 const Icon = item.icon;
@@ -181,9 +170,8 @@ export default async function HomePage() {
                 {t("cta.whatsapp")}
               </Button>
               <Button
-                variant="outline"
-                className="h-11 border-white/30 px-6 text-white hover:bg-white/10 hover:text-white"
                 size="lg"
+                className="bg-white text-orange-600 border-white hover:bg-orange-50 font-semibold"
                 render={<Link href="/products" />}
               >
                 {t("cta.browseProducts")}
