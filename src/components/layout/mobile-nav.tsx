@@ -2,17 +2,12 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { MessageCircle } from "lucide-react";
 import {
   Sheet,
   SheetTrigger,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
   SheetClose,
-  SheetFooter,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { formatWhatsAppUrl } from "@/lib/utils";
@@ -48,71 +43,96 @@ export function MobileNav({ children }: MobileNavProps) {
   return (
     <Sheet>
       <SheetTrigger render={<span />}>{children}</SheetTrigger>
-      <SheetContent side="left" className="flex flex-col overflow-y-auto">
-        <SheetHeader>
-          <SheetTitle className="font-heading text-lg font-bold">
-            Jakarta Trade Connect
-          </SheetTitle>
-        </SheetHeader>
-
-        <nav className="flex flex-col gap-1 px-4">
-          <SheetClose
-            render={
-              <Link
-                href="/"
-                className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
-              />
-            }
-          >
-            {t("nav.home")}
-          </SheetClose>
-          <SheetClose
-            render={
-              <Link
-                href="/products"
-                className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
-              />
-            }
-          >
-            {t("nav.products")}
-          </SheetClose>
-
-          <div className="my-2 border-t" />
-          <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {t("nav.categories")}
-          </p>
-
-          {categories.map((cat) => (
+      <SheetContent
+        side="left"
+        showCloseButton={false}
+        className="!w-full !max-w-none !border-0 bg-navy-950 text-white"
+      >
+        <div className="flex min-h-dvh flex-col px-8 py-6">
+          {/* Top bar: logo + close */}
+          <div className="flex items-center justify-between">
+            <span className="font-display text-sm font-bold uppercase tracking-wider text-white">
+              JAKARTA TRADE CONNECT
+            </span>
             <SheetClose
-              key={cat.slug}
               render={
-                <Link
-                  href={`/categories/${cat.slug}`}
-                  className="rounded-md px-3 py-2 text-sm hover:bg-muted"
+                <button
+                  type="button"
+                  className="flex items-center justify-center p-2 text-gray-400 hover:text-white transition-colors"
+                  aria-label="Close menu"
                 />
               }
             >
-              {t(`categories.${cat.key}`)}
+              {/* Custom X using divs */}
+              <span className="relative block h-5 w-5">
+                <span className="absolute left-1/2 top-1/2 block h-[2px] w-5 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-current" />
+                <span className="absolute left-1/2 top-1/2 block h-[2px] w-5 -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-current" />
+              </span>
             </SheetClose>
-          ))}
-        </nav>
+          </div>
 
-        <SheetFooter className="gap-4 border-t pt-4">
-          <LanguageToggle />
-          <Button
-            className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
-            render={
-              <a
-                href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            }
-          >
-            <MessageCircle className="size-4" />
-            {t("cta.whatsapp")}
-          </Button>
-        </SheetFooter>
+          {/* Main nav links */}
+          <nav className="mt-14 flex flex-col gap-6">
+            <SheetClose
+              render={
+                <Link
+                  href="/"
+                  className="font-display text-2xl font-medium uppercase tracking-wide text-white hover:text-amber-400 transition-colors"
+                />
+              }
+            >
+              {t("nav.home")}
+            </SheetClose>
+            <SheetClose
+              render={
+                <Link
+                  href="/products"
+                  className="font-display text-2xl font-medium uppercase tracking-wide text-white hover:text-amber-400 transition-colors"
+                />
+              }
+            >
+              {t("nav.products")}
+            </SheetClose>
+          </nav>
+
+          {/* Divider */}
+          <div className="mt-8 mb-6 h-px bg-navy-800" />
+
+          {/* Category heading */}
+          <p className="font-display text-xs font-medium uppercase tracking-widest text-amber-500 mb-4">
+            {t("nav.categories")}
+          </p>
+
+          {/* Category links */}
+          <nav className="flex flex-col gap-3 overflow-y-auto flex-1">
+            {categories.map((cat) => (
+              <SheetClose
+                key={cat.slug}
+                render={
+                  <Link
+                    href={`/categories/${cat.slug}`}
+                    className="font-display text-lg text-gray-400 hover:text-white transition-colors"
+                  />
+                }
+              >
+                {t(`categories.${cat.key}`)}
+              </SheetClose>
+            ))}
+          </nav>
+
+          {/* Bottom section */}
+          <div className="mt-8 flex flex-col gap-5 pb-4">
+            <LanguageToggle />
+            <a
+              href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center bg-amber-500 text-navy-950 font-display font-semibold text-sm uppercase tracking-wide px-6 py-3 rounded-sm hover:bg-amber-400 transition-colors"
+            >
+              {t("cta.whatsapp")}
+            </a>
+          </div>
+        </div>
       </SheetContent>
     </Sheet>
   );

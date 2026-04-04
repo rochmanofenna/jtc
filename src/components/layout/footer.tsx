@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { formatWhatsAppUrl } from "@/lib/utils";
 
@@ -36,68 +35,87 @@ export function Footer({ locale = "id", messages, navMessages }: FooterProps) {
   };
 
   return (
-    <footer className="bg-navy-950 text-navy-200">
-      <div className="container-wide py-12">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    <footer className="bg-navy-950 text-white">
+      <div className="container-wide py-14 lg:py-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {/* Branding */}
-          <div className="space-y-3">
-            <h3 className="font-heading text-lg font-bold text-white">
-              Jakarta Trade Connect
+          <div className="space-y-4">
+            <h3 className="font-display font-bold uppercase tracking-wider text-white text-sm">
+              JAKARTA TRADE CONNECT
             </h3>
-            <p className="text-sm leading-relaxed text-navy-300">
+            <p className="font-body text-sm leading-relaxed text-gray-500 max-w-xs">
               {footerText.description}
             </p>
+            <div className="w-10 h-0.5 bg-amber-500" />
           </div>
 
-          {/* Quick links */}
-          <div className="space-y-3">
-            <h4 className="font-heading text-sm font-semibold text-white">
-              {footerText.quickLinks}
+          {/* Products */}
+          <div>
+            <h4 className="font-display text-xs uppercase tracking-widest text-amber-500 mb-4">
+              PRODUCTS
             </h4>
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-2.5">
               <Link
-                href="/"
-                className="text-sm text-navy-300 transition-colors hover:text-white"
+                href="/categories/safety-helmets"
+                className="font-body text-sm text-gray-400 transition-colors hover:text-white"
               >
-                {navText.home}
+                Safety Helmets
+              </Link>
+              <Link
+                href="/categories/gloves"
+                className="font-body text-sm text-gray-400 transition-colors hover:text-white"
+              >
+                Gloves
+              </Link>
+              <Link
+                href="/categories/safety-footwear"
+                className="font-body text-sm text-gray-400 transition-colors hover:text-white"
+              >
+                Safety Shoes
+              </Link>
+              <Link
+                href="/categories/power-tools-battery"
+                className="font-body text-sm text-gray-400 transition-colors hover:text-white"
+              >
+                Power Tools
               </Link>
               <Link
                 href="/products"
-                className="text-sm text-navy-300 transition-colors hover:text-white"
+                className="font-body text-sm text-gray-400 transition-colors hover:text-white"
               >
-                {navText.products}
-              </Link>
-              <Link
-                href="/categories/safety-helmets"
-                className="text-sm text-navy-300 transition-colors hover:text-white"
-              >
-                {navText.categories}
+                View All Products
               </Link>
             </nav>
           </div>
 
           {/* Contact */}
-          <div className="space-y-3">
-            <h4 className="font-heading text-sm font-semibold text-white">
-              {footerText.contactUs}
+          <div>
+            <h4 className="font-display text-xs uppercase tracking-widest text-amber-500 mb-4">
+              CONTACT
             </h4>
-            <a
-              href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-navy-300 transition-colors hover:text-white"
-            >
-              <MessageCircle className="size-4" />
-              {footerText.whatsapp}
-            </a>
+            <div className="flex flex-col gap-2.5">
+              <a
+                href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-body text-sm text-gray-400 transition-colors hover:text-white"
+              >
+                {footerText.whatsapp}
+              </a>
+              <p className="font-body text-sm text-gray-500">
+                Jakarta, Indonesia
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-navy-800">
-        <div className="container-wide flex h-12 items-center justify-center">
-          <p className="text-xs text-navy-400">{footerText.copyright}</p>
+      {/* Divider + bottom bar */}
+      <div className="border-t border-navy-700">
+        <div className="container-wide flex h-14 items-center justify-center">
+          <p className="font-body text-xs text-gray-600">
+            {footerText.copyright}
+          </p>
         </div>
       </div>
     </footer>
