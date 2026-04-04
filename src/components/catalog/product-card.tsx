@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Package } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
@@ -14,7 +14,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.slug}`} className="group/link block">
-      <Card className="h-full transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <Card className="h-full transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
         {/* Image area */}
         <div className="relative aspect-square overflow-hidden rounded-t-xl bg-muted">
           {mainImage ? (
@@ -32,40 +32,36 @@ export function ProductCard({ product, locale }: ProductCardProps) {
           )}
         </div>
 
-        <CardContent className="space-y-1.5">
+        <div className="p-3 sm:p-4 space-y-1.5">
+          {/* Category label — small, uppercase, muted */}
+          {product.category?.name && (
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              {product.category.name}
+            </p>
+          )}
+
           {/* Product name */}
-          <h3 className="line-clamp-2 font-medium leading-snug">
+          <h3 className="font-medium text-sm leading-tight line-clamp-2">
             {product.name}
           </h3>
 
-          {/* Chinese name */}
+          {/* Chinese name if locale is cn */}
           {locale === "cn" && product.nameCn && (
-            <p className="line-clamp-1 text-xs text-muted-foreground">
-              {product.nameCn}
-            </p>
+            <p className="text-xs text-muted-foreground line-clamp-1">{product.nameCn}</p>
           )}
 
           {/* Material badge */}
           {product.material && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-[10px] max-w-full truncate">
               {product.material}
             </Badge>
           )}
 
-          {/* Brand */}
-          {product.brandName && (
-            <Badge variant="outline" className="text-xs">
-              {product.brandName}
-            </Badge>
-          )}
-
-          {/* Packaging */}
+          {/* Packaging info */}
           {product.packaging && (
-            <p className="line-clamp-1 text-xs text-muted-foreground">
-              {product.packaging}
-            </p>
+            <p className="text-[11px] text-muted-foreground">{product.packaging}</p>
           )}
-        </CardContent>
+        </div>
       </Card>
     </Link>
   );
