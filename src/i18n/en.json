@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "Jakarta Trade Connect",
+    "appNameFull": "Jakarta Trade Connect",
     "search": "Search products...",
     "searchPlaceholder": "Search helmets, gloves, boots...",
     "viewAll": "View All",
@@ -73,17 +74,17 @@
   },
   "whyUs": {
     "title": "Why Choose Us",
-    "factoryVerified": {
+    "verified": {
       "title": "Factory-Verified Suppliers",
-      "description": "Every supplier is verified directly at the factory by our team. Quality guaranteed."
+      "description": "Our team visits every factory in person. We've inspected production lines and checked certifications — so you don't have to fly to China."
     },
-    "bilingual": {
-      "title": "Multilingual Support",
-      "description": "Platform available in Bahasa Indonesia, English, and Chinese for seamless communication."
+    "multilingual": {
+      "title": "Bilingual Communication",
+      "description": "We handle all communication between Indonesian buyers and Chinese suppliers in Bahasa, English, and Mandarin."
     },
-    "bulkPricing": {
-      "title": "Bulk Pricing",
-      "description": "Factory-direct prices for bulk purchases. No excessive middlemen."
+    "pricing": {
+      "title": "Direct Pricing, No Hidden Fees",
+      "description": "Buy at factory prices with transparent margins. No mystery markups from layers of middlemen."
     }
   },
   "cta": {

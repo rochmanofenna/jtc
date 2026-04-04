@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "雅加达贸易通",
+    "appNameFull": "Jakarta Trade Connect",
     "search": "搜索产品...",
     "searchPlaceholder": "搜索安全帽、手套、安全鞋...",
     "viewAll": "查看全部",
@@ -73,17 +74,17 @@
   },
   "whyUs": {
     "title": "为什么选择我们",
-    "factoryVerified": {
+    "verified": {
       "title": "工厂验证供应商",
-      "description": "每个供应商均由我们的团队在工厂现场验证。品质保证。"
+      "description": "我们的团队亲自走访每一家工厂，检查生产线和资质认证——这样您就不必亲自飞往中国。"
     },
-    "bilingual": {
-      "title": "多语言支持",
-      "description": "平台支持印尼语、英语和中文，实现无障碍沟通。"
+    "multilingual": {
+      "title": "多语言沟通",
+      "description": "我们用印尼语、英语和中文处理印尼买家与中国供应商之间的所有沟通。"
     },
-    "bulkPricing": {
-      "title": "批量价格",
-      "description": "大宗采购享受工厂直供价格。无多余中间商。"
+    "pricing": {
+      "title": "直接定价，无隐藏费用",
+      "description": "以工厂价格购买，利润透明。没有层层中间商的加价。"
     }
   },
   "cta": {

@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "Jakarta Trade Connect",
+    "appNameFull": "Jakarta Trade Connect",
     "search": "Cari produk...",
     "searchPlaceholder": "Cari helm, sarung tangan, sepatu...",
     "viewAll": "Lihat Semua",
@@ -73,17 +74,17 @@
   },
   "whyUs": {
     "title": "Mengapa Memilih Kami",
-    "factoryVerified": {
+    "verified": {
       "title": "Pemasok Terverifikasi Pabrik",
-      "description": "Setiap pemasok diverifikasi langsung di pabrik oleh tim kami. Kualitas terjamin."
+      "description": "Tim kami mengunjungi setiap pabrik secara langsung. Kami memeriksa lini produksi dan sertifikasi — sehingga Anda tidak perlu terbang ke Tiongkok."
     },
-    "bilingual": {
-      "title": "Dukungan Multibahasa",
-      "description": "Platform tersedia dalam Bahasa Indonesia, English, dan 中文 untuk komunikasi tanpa hambatan."
+    "multilingual": {
+      "title": "Komunikasi Multibahasa",
+      "description": "Kami menangani semua komunikasi antara pembeli Indonesia dan pemasok Tiongkok dalam Bahasa Indonesia, Inggris, dan Mandarin."
     },
-    "bulkPricing": {
-      "title": "Harga Grosir",
-      "description": "Harga langsung pabrik untuk pembelian dalam jumlah besar. Tanpa perantara berlebih."
+    "pricing": {
+      "title": "Harga Langsung, Tanpa Biaya Tersembunyi",
+      "description": "Beli dengan harga pabrik dan margin transparan. Tanpa markup dari perantara berlapis."
     }
   },
   "cta": {
