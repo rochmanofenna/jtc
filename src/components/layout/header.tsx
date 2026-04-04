@@ -44,7 +44,8 @@ export function Header() {
           href="/"
           className="shrink-0 font-heading text-xl font-bold tracking-tight text-white"
         >
-          JTC
+          <span className="hidden md:inline">Jakarta Trade Connect</span>
+          <span className="md:hidden">JTC</span>
         </Link>
 
         {/* Desktop search */}
