@@ -1,11 +1,9 @@
 import Link from "next/link";
-import { ShieldCheck, Languages, BadgeDollarSign, MessageCircle } from "lucide-react";
+import { ShieldCheck, Languages, DollarSign } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { formatWhatsAppUrl } from "@/lib/utils";
 import { CategoryCard } from "@/components/catalog/category-card";
@@ -31,64 +29,85 @@ export default async function HomePage() {
     })
   );
 
+  const totalProducts = categoriesWithCounts.reduce((sum, c) => sum + c.productCount, 0);
+  const totalCategories = categoriesWithCounts.length;
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         {/* ── Hero ────────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-navy-900 to-navy-950">
+        <section className="relative overflow-hidden bg-navy-950 min-h-[70vh] lg:min-h-[85vh] flex items-center">
           {/* Grid pattern overlay */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
               backgroundImage:
-                "linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px)",
+                "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
               backgroundSize: "60px 60px",
             }}
           />
-          <div className="container-wide relative py-20 lg:py-32">
-            <div className="mx-auto max-w-3xl text-center">
-              <h1 className="font-heading text-4xl font-bold text-white lg:text-6xl">
+          <div className="container-wide relative w-full">
+            <div className="max-w-3xl">
+              <h1
+                className="font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-white leading-[1.1]"
+                style={{ animation: "fadeUp 600ms ease-out 200ms both" }}
+              >
                 {t("hero.title")}
               </h1>
-              <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-navy-200">
+              <p
+                className="font-body text-lg sm:text-xl text-gray-400 mt-6 max-w-xl"
+                style={{ animation: "fadeUp 600ms ease-out 400ms both" }}
+              >
                 {t("hero.subtitle")}
               </p>
-              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Button
-                  className="h-11 bg-accent px-6 text-accent-foreground hover:bg-accent/90"
-                  size="lg"
-                  render={<Link href="/products" />}
+              <div
+                className="mt-8 flex gap-4 flex-col sm:flex-row"
+                style={{ animation: "fadeUp 600ms ease-out 600ms both" }}
+              >
+                <Link
+                  href="/products"
+                  className="bg-amber-500 text-navy-950 font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-sm hover:bg-amber-400 transition-colors text-center"
                 >
                   {t("hero.cta")}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-11 border-white/30 px-6 text-white hover:bg-white/10 hover:text-white"
-                  size="lg"
-                  render={
-                    <a
-                      href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    />
-                  }
+                </Link>
+                <a
+                  href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-white/20 text-white font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-sm hover:bg-white/5 transition-colors text-center"
                 >
-                  <MessageCircle className="size-4" />
                   {t("hero.ctaWhatsApp")}
-                </Button>
+                </a>
+              </div>
+              <div
+                className="mt-12 flex gap-8 items-center flex-wrap"
+                style={{ animation: "fadeUp 600ms ease-out 800ms both" }}
+              >
+                <span className="font-mono text-sm text-gray-500">
+                  <span className="text-amber-400">{totalProducts}+</span> Products
+                </span>
+                <span className="w-px h-4 bg-navy-700" aria-hidden="true" />
+                <span className="font-mono text-sm text-gray-500">
+                  <span className="text-white">{totalCategories}</span> Categories
+                </span>
+                <span className="w-px h-4 bg-navy-700" aria-hidden="true" />
+                <span className="font-mono text-sm text-gray-500">
+                  <span className="text-white">Verified</span> Suppliers
+                </span>
               </div>
             </div>
           </div>
         </section>
 
         {/* ── Categories Grid ────────────────────────────────────────── */}
-        <section className="py-16 lg:py-24">
+        <section className="bg-gray-50 py-20 lg:py-28">
           <div className="container-wide">
-            <h2 className="font-heading text-2xl font-bold text-foreground lg:text-3xl">
+            <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
               {t("nav.categories")}
-            </h2>
-            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+            </span>
+            <div className="w-10 h-0.5 bg-amber-500 mt-2 mb-10" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-5">
               {categoriesWithCounts.map((category: any) => (
                 <CategoryCard
                   key={category.id}
@@ -100,13 +119,14 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ── Why Us ─────────────────────────────────────────────────── */}
-        <section className="bg-muted/50 py-16 lg:py-24">
+        {/* ── Why Choose Us ──────────────────────────────────────────── */}
+        <section className="bg-navy-900 py-20 lg:py-28">
           <div className="container-wide">
-            <h2 className="text-center font-heading text-2xl font-bold text-foreground lg:text-3xl">
-              {t("whyUs.title")}
-            </h2>
-            <div className="mt-10 grid gap-6 sm:grid-cols-3">
+            <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
+              WHY WORK WITH US
+            </span>
+            <div className="w-10 h-0.5 bg-amber-500 mt-2 mb-10" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8">
               {[
                 {
                   icon: ShieldCheck,
@@ -119,63 +139,64 @@ export default async function HomePage() {
                   descKey: "whyUs.multilingual.description" as const,
                 },
                 {
-                  icon: BadgeDollarSign,
+                  icon: DollarSign,
                   titleKey: "whyUs.pricing.title" as const,
                   descKey: "whyUs.pricing.description" as const,
                 },
               ].map((item) => {
                 const Icon = item.icon;
                 return (
-                  <Card key={item.titleKey}>
-                    <CardContent className="flex flex-col items-center gap-4 py-8 text-center">
-                      <div className="flex size-14 items-center justify-center rounded-full bg-accent/10 text-accent">
-                        <Icon className="size-7" />
-                      </div>
-                      <h3 className="font-heading text-lg font-semibold">
-                        {t(item.titleKey)}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-muted-foreground">
-                        {t(item.descKey)}
-                      </p>
-                    </CardContent>
-                  </Card>
+                  <div
+                    key={item.titleKey}
+                    className="bg-navy-800 border border-navy-700 rounded-sm p-6 lg:p-8"
+                  >
+                    <div className="w-10 h-[3px] bg-amber-500 mb-6" />
+                    <Icon className="text-amber-500 size-5 mb-4" />
+                    <h3 className="font-display text-base font-semibold text-white mb-2">
+                      {t(item.titleKey)}
+                    </h3>
+                    <p className="font-body text-sm text-gray-400 leading-relaxed">
+                      {t(item.descKey)}
+                    </p>
+                  </div>
                 );
               })}
             </div>
           </div>
         </section>
 
-        {/* ── CTA Banner ─────────────────────────────────────────────── */}
-        <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-16">
-          <div className="container-wide text-center">
-            <h2 className="font-heading text-3xl font-bold text-white lg:text-4xl">
-              {t("cta.ready")}
-            </h2>
-            <p className="mt-3 text-lg text-white/90">
-              {t("cta.readyDescription")}
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button
-                className="h-11 bg-white px-6 text-orange-600 hover:bg-white/90"
-                size="lg"
-                render={
-                  <a
-                    href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  />
-                }
-              >
-                <MessageCircle className="size-4" />
-                {t("cta.whatsapp")}
-              </Button>
-              <Button
-                size="lg"
-                className="bg-white text-orange-600 border-white hover:bg-orange-50 font-semibold"
-                render={<Link href="/products" />}
-              >
-                {t("cta.browseProducts")}
-              </Button>
+        {/* ── CTA ────────────────────────────────────────────────────── */}
+        <section
+          className="py-20 lg:py-28"
+          style={{
+            background:
+              "radial-gradient(ellipse at 0% 100%, rgba(245,158,11,0.06) 0%, transparent 60%), #0a0f1a",
+          }}
+        >
+          <div className="container-wide">
+            <div className="max-w-2xl">
+              <h2 className="font-display text-3xl lg:text-4xl font-bold text-white uppercase">
+                {t("cta.ready")}
+              </h2>
+              <p className="font-body text-lg text-gray-400 mt-4">
+                {t("cta.readyDescription")}
+              </p>
+              <div className="mt-8 flex gap-4 flex-col sm:flex-row">
+                <a
+                  href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-amber-500 text-navy-950 font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-sm hover:bg-amber-400 transition-colors text-center"
+                >
+                  {t("cta.whatsapp")}
+                </a>
+                <Link
+                  href="/products"
+                  className="border border-white/20 text-white font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-sm hover:bg-white/5 transition-colors text-center"
+                >
+                  {t("cta.browseProducts")} →
+                </Link>
+              </div>
             </div>
           </div>
         </section>
