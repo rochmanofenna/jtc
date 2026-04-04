@@ -45,8 +45,6 @@ export default async function ProductsPage({
   const search = typeof params.search === "string" ? params.search : undefined;
   const categorySlug =
     typeof params.category === "string" ? params.category : undefined;
-  const material =
-    typeof params.material === "string" ? params.material : undefined;
   const pageNum = Math.max(
     1,
     typeof params.page === "string" ? parseInt(params.page, 10) || 1 : 1
@@ -54,50 +52,45 @@ export default async function ProductsPage({
 
   const t = await getTranslations();
 
-  // Fetch all categories for the sidebar nav
-  const categories = await prisma.category.findMany({
+  // Fetch all top-level categories with children for subcategory-inclusive counts
+  const categoriesRaw = await prisma.category.findMany({
     where: { parentId: null },
-    include: {
-      _count: { select: { products: true } },
-      children: {
-        include: { _count: { select: { products: true } } },
-        orderBy: { sortOrder: "asc" },
-      },
-    },
+    include: { children: { select: { id: true } } },
     orderBy: { sortOrder: "asc" },
   });
 
-  // Fetch unique materials for filter
-  const materialsRaw = await prisma.product.findMany({
-    where: { isActive: true, material: { not: null } },
-    select: { material: true },
-    distinct: ["material"],
-    orderBy: { material: "asc" },
-  });
-  const materials = materialsRaw
-    .map((m: any) => m.material!)
-    .filter(Boolean);
+  const categories = await Promise.all(
+    categoriesRaw.map(async (cat) => {
+      const ids = [cat.id, ...cat.children.map((c: any) => c.id)];
+      const count = await prisma.product.count({
+        where: { categoryId: { in: ids }, isActive: true },
+      });
+      return { ...cat, productCount: count };
+    })
+  );
 
-  // Resolve category ID from slug
-  let categoryId: string | undefined;
+  // Resolve category for filtering (include subcategories)
   let activeCategoryName: string | undefined;
   if (categorySlug) {
     const cat = await prisma.category.findUnique({
       where: { slug: categorySlug },
     });
     if (cat) {
-      categoryId = cat.id;
       activeCategoryName = cat.name;
     }
   }
 
   // Build product query
   const where: any = { isActive: true };
-  if (categoryId) {
-    where.categoryId = categoryId;
-  }
-  if (material) {
-    where.material = material;
+  if (categorySlug) {
+    const cat = await prisma.category.findUnique({
+      where: { slug: categorySlug },
+      include: { children: { select: { id: true } } },
+    });
+    if (cat) {
+      const ids = [cat.id, ...cat.children.map((c: any) => c.id)];
+      where.categoryId = { in: ids };
+    }
   }
   if (search) {
     where.OR = [
@@ -130,7 +123,6 @@ export default async function ProductsPage({
     const base: Record<string, string> = {};
     if (search) base.search = search;
     if (categorySlug) base.category = categorySlug;
-    if (material) base.material = material;
     // Remove any keys with undefined values (clear filter)
     const merged = { ...base, ...overrides };
     const cleaned = Object.fromEntries(
@@ -140,7 +132,7 @@ export default async function ProductsPage({
     return `/products${qs ? `?${qs}` : ""}`;
   }
 
-  const hasActiveFilters = !!(search || categorySlug || material);
+  const hasActiveFilters = !!(search || categorySlug);
 
   return (
     <div className="container-wide py-8">
@@ -173,14 +165,6 @@ export default async function ProductsPage({
             <Badge variant="secondary" className="gap-1.5">
               {activeCategoryName}
               <Link href={buildUrl({ category: undefined, page: undefined })}>
-                <X className="size-3" />
-              </Link>
-            </Badge>
-          )}
-          {material && (
-            <Badge variant="secondary" className="gap-1.5">
-              {material}
-              <Link href={buildUrl({ material: undefined, page: undefined })}>
                 <X className="size-3" />
               </Link>
             </Badge>
@@ -254,39 +238,12 @@ export default async function ProductsPage({
                   >
                     <span>{cat.name}</span>
                     <span className="text-xs text-muted-foreground">
-                      {cat._count.products}
+                      {cat.productCount}
                     </span>
                   </Link>
                 ))}
               </nav>
             </div>
-
-            {/* Material filter */}
-            {materials.length > 0 && (
-              <div>
-                <h3 className="mb-3 font-heading text-sm font-semibold">
-                  {t("filter.material")}
-                </h3>
-                <nav className="flex flex-col gap-0.5">
-                  {materials.map((mat: any) => (
-                    <Link
-                      key={mat}
-                      href={buildUrl({
-                        material: material === mat ? undefined : mat,
-                        page: undefined,
-                      })}
-                      className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
-                        material === mat
-                          ? "bg-primary/10 font-medium text-primary"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                      }`}
-                    >
-                      {mat}
-                    </Link>
-                  ))}
-                </nav>
-              </div>
-            )}
           </div>
         </aside>
 
