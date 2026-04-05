@@ -33,8 +33,8 @@
     "dashboard": "Dashboard"
   },
   "hero": {
-    "title": "Safety & Industrial Equipment — Direct from Factory",
-    "subtitle": "B2B procurement platform connecting Indonesian buyers with verified Chinese industrial suppliers. Safety gear, tools, and construction materials at factory-direct prices.",
+    "title": "Industrial Equipment & Energy Solutions — Direct from Factory",
+    "subtitle": "B2B procurement platform connecting Indonesian buyers with verified Chinese suppliers. Safety equipment, power tools, energy storage systems, and solar solutions at factory-direct prices.",
     "cta": "Browse Catalog",
     "ctaWhatsApp": "Contact via WhatsApp"
   },
@@ -56,7 +56,12 @@
     "tapes-ties-packaging": "Tapes & Cable Ties",
     "woven-products": "Woven Products",
     "traffic-safety": "Traffic Safety",
-    "site-equipment": "Site Equipment"
+    "site-equipment": "Site Equipment",
+    "energy-storage": "Energy Storage",
+    "inverters": "Inverters",
+    "energy-storage-systems": "Energy Storage Systems",
+    "all-in-one-systems": "All-in-One Systems",
+    "solar-power": "Solar Power"
   },
   "product": {
     "requestQuote": "Request Quote",

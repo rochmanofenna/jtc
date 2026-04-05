@@ -33,8 +33,8 @@
     "dashboard": "Dashboard"
   },
   "hero": {
-    "title": "Alat Keselamatan & Industri — Langsung dari Pabrik",
-    "subtitle": "Platform pengadaan B2B yang menghubungkan pembeli Indonesia dengan pemasok industri Tiongkok terverifikasi. Peralatan keselamatan, alat, dan material konstruksi dengan harga langsung pabrik.",
+    "title": "Peralatan Industri & Solusi Energi — Langsung dari Pabrik",
+    "subtitle": "Platform pengadaan B2B yang menghubungkan pembeli Indonesia dengan pemasok Tiongkok terverifikasi. Peralatan keselamatan, alat listrik, sistem penyimpanan energi, dan solusi tenaga surya dengan harga langsung pabrik.",
     "cta": "Jelajahi Katalog",
     "ctaWhatsApp": "Hubungi via WhatsApp"
   },
@@ -56,7 +56,12 @@
     "tapes-ties-packaging": "Lakban & Kabel Ties",
     "woven-products": "Produk Anyaman",
     "traffic-safety": "Fasilitas Lalu Lintas",
-    "site-equipment": "Peralatan Lokasi"
+    "site-equipment": "Peralatan Lokasi",
+    "energy-storage": "Penyimpanan Energi",
+    "inverters": "Inverter",
+    "energy-storage-systems": "Sistem Penyimpanan Energi",
+    "all-in-one-systems": "Sistem All-in-One",
+    "solar-power": "Tenaga Surya"
   },
   "product": {
     "requestQuote": "Minta Penawaran",

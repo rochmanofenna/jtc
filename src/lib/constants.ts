@@ -26,4 +26,9 @@ export const CATEGORY_ICONS: Record<string, string> = {
   "woven-products": "Grid3x3",
   "traffic-safety": "Construction",
   "site-equipment": "Building",
+  "energy-storage": "Battery",
+  "inverters": "Zap",
+  "energy-storage-systems": "Server",
+  "all-in-one-systems": "Box",
+  "solar-power": "Sun",
 };

@@ -33,8 +33,8 @@
     "dashboard": "控制台"
   },
   "hero": {
-    "title": "安全与工业设备 — 工厂直供",
-    "subtitle": "B2B采购平台，连接印尼买家与经过验证的中国工业供应商。安全装备、工具和建筑材料，工厂直供价格。",
+    "title": "工业设备与能源解决方案 — 工厂直供",
+    "subtitle": "B2B采购平台，连接印尼买家与经过验证的中国供应商。安全装备、电动工具、储能系统和太阳能解决方案，工厂直供价格。",
     "cta": "浏览目录",
     "ctaWhatsApp": "通过WhatsApp联系"
   },
@@ -56,7 +56,12 @@
     "tapes-ties-packaging": "胶带和扎带",
     "woven-products": "编织品",
     "traffic-safety": "交通设施",
-    "site-equipment": "工地设备"
+    "site-equipment": "工地设备",
+    "energy-storage": "储能系统",
+    "inverters": "逆变器",
+    "energy-storage-systems": "储能柜",
+    "all-in-one-systems": "一体机",
+    "solar-power": "太阳能"
   },
   "product": {
     "requestQuote": "请求报价",
