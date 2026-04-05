@@ -118,6 +118,7 @@ model Product {
   colors         String[]
   sizes          String[]
   brandName      String?
+  warranty       String?
   isActive       Boolean  @default(true)
   sortOrder      Int      @default(0)
   supplierId     String
