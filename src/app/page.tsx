@@ -6,31 +6,37 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { formatWhatsAppUrl } from "@/lib/utils";
-import { CategoryCard } from "@/components/catalog/category-card";
+import { SuperCategoryCard } from "@/components/catalog/super-category-card";
+import { getDescendantCategoryIds } from "@/lib/category-tree";
 
 export default async function HomePage() {
   const t = await getTranslations();
 
-  // Get parent categories with their children
-  const categoriesRaw = await prisma.category.findMany({
+  // Get the 3 super-parent categories (PPE, Construction Tools, Electric Supply)
+  const superCategoriesRaw = await prisma.category.findMany({
     where: { parentId: null },
     include: { children: { select: { id: true } } },
     orderBy: { sortOrder: "asc" },
   });
 
-  // Count products across parent + all children for each
-  const categoriesWithCounts = await Promise.all(
-    categoriesRaw.map(async (category) => {
-      const categoryIds = [category.id, ...category.children.map((c: any) => c.id)];
+  // For each super, count ALL products in its subtree (any depth) and count
+  // its direct children (mid categories) for the card subtitle.
+  const superCategories = await Promise.all(
+    superCategoriesRaw.map(async (category) => {
+      const allDescendantIds = await getDescendantCategoryIds(category.id);
       const productCount = await prisma.product.count({
-        where: { categoryId: { in: categoryIds }, isActive: true },
+        where: { categoryId: { in: allDescendantIds }, isActive: true },
       });
-      return { ...category, productCount };
+      return {
+        ...category,
+        productCount,
+        subcategoryCount: category.children.length,
+      };
     })
   );
 
-  const totalProducts = categoriesWithCounts.reduce((sum, c) => sum + c.productCount, 0);
-  const totalCategories = categoriesWithCounts.length;
+  const totalProducts = superCategories.reduce((sum, c) => sum + c.productCount, 0);
+  const totalCategories = superCategories.length;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -100,19 +106,20 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ── Categories Grid ────────────────────────────────────────── */}
+        {/* ── Super Categories Grid ──────────────────────────────────── */}
         <section className="bg-gray-50 py-20 lg:py-28">
           <div className="container-wide">
             <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
               {t("nav.categories")}
             </span>
             <div className="w-10 h-0.5 bg-amber-500 mt-2 mb-10" />
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-5">
-              {categoriesWithCounts.map((category: any) => (
-                <CategoryCard
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              {superCategories.map((category) => (
+                <SuperCategoryCard
                   key={category.id}
                   category={category}
                   productCount={category.productCount}
+                  subcategoryCount={category.subcategoryCount}
                 />
               ))}
             </div>
