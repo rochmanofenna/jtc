@@ -133,14 +133,23 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
           {/* Desktop quote button */}
           <div className="hidden sm:block">
-            <QuoteButton productName={product.name} />
+            <QuoteButton
+              productName={product.name}
+              productSlug={product.slug}
+              productId={product.id}
+            />
           </div>
         </div>
       </div>
 
       {/* Mobile sticky bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gray-200 p-4 sm:hidden">
-        <QuoteButton productName={product.name} className="w-full" />
+        <QuoteButton
+          productName={product.name}
+          productSlug={product.slug}
+          productId={product.id}
+          className="w-full"
+        />
       </div>
     </div>
   );
