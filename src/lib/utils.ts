@@ -46,6 +46,91 @@ export function getWhatsAppQuoteMessage(
 }
 
 /**
+ * Build a fully-formatted WhatsApp message containing all data collected by
+ * the QuoteInquiry form. Trilingual (id / en / cn).
+ *
+ * Used by the QuoteInquiryModal — the message body becomes the `text` query
+ * param of the wa.me URL so the supplier opens WhatsApp with everything
+ * pre-filled and just needs to hit send.
+ */
+export interface QuoteInquiryMessageData {
+  name: string;
+  email: string;
+  phone: string;
+  company?: string;
+  message: string;
+  productName?: string;
+  productSlug?: string;
+}
+
+export function buildQuoteInquiryMessage(
+  data: QuoteInquiryMessageData,
+  locale: string,
+): string {
+  const { name, email, phone, company, message, productName, productSlug } = data;
+
+  const labels = (() => {
+    switch (locale) {
+      case "id":
+        return {
+          header: "*Permintaan Penawaran — Jakarta Trade Connect*",
+          name: "Nama",
+          email: "Email",
+          phone: "Telepon",
+          company: "Perusahaan",
+          product: "Produk",
+          sku: "Kode Produk",
+          requirements: "Kebutuhan",
+        };
+      case "cn":
+        return {
+          header: "*\u62A5\u4EF7\u8BF7\u6C42 — Jakarta Trade Connect*",
+          name: "\u59D3\u540D",
+          email: "\u90AE\u7BB1",
+          phone: "\u7535\u8BDD",
+          company: "\u516C\u53F8",
+          product: "\u4EA7\u54C1",
+          sku: "\u4EA7\u54C1\u7F16\u53F7",
+          requirements: "\u9700\u6C42",
+        };
+      default:
+        return {
+          header: "*Quote Request — Jakarta Trade Connect*",
+          name: "Name",
+          email: "Email",
+          phone: "Phone",
+          company: "Company",
+          product: "Product",
+          sku: "SKU",
+          requirements: "Requirements",
+        };
+    }
+  })();
+
+  const lines: string[] = [];
+  lines.push(labels.header);
+  lines.push("");
+  lines.push(`*${labels.name}:* ${name}`);
+  lines.push(`*${labels.email}:* ${email}`);
+  lines.push(`*${labels.phone}:* ${phone}`);
+  if (company) {
+    lines.push(`*${labels.company}:* ${company}`);
+  }
+  if (productName) {
+    lines.push("");
+    lines.push(`*${labels.product}:* ${productName}`);
+    if (productSlug) {
+      lines.push(`*${labels.sku}:* ${productSlug}`);
+    }
+  }
+  lines.push("");
+  lines.push(`*${labels.requirements}:*`);
+  lines.push(message);
+
+  return lines.join("\n");
+}
+
+/**
  * Truncate a string to the given length, appending an ellipsis if trimmed.
  */
 export function truncate(str: string, length: number): string {

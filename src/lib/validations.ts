@@ -76,3 +76,20 @@ export const productQuerySchema = z.object({
 });
 
 export type ProductQuery = z.infer<typeof productQuerySchema>;
+
+// ─── Quote Inquiry ──────────────────────────────────────────────────────────
+
+export const createQuoteInquirySchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Valid email is required"),
+  phone: z.string().min(8, "Valid phone number is required"),
+  company: z.string().optional(),
+  message: z.string().min(10, "Please describe what you need"),
+  productId: z.string().optional(),
+  productName: z.string().optional(),
+  productSlug: z.string().optional(),
+  locale: z.enum(["id", "en", "cn"]).default("id"),
+  source: z.string().default("website_form"),
+});
+
+export type CreateQuoteInquiryInput = z.infer<typeof createQuoteInquirySchema>;
