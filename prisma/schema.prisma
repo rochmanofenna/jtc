@@ -258,3 +258,22 @@ model Payment {
 
   order Order @relation(fields: [orderId], references: [id])
 }
+
+model QuoteInquiry {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  phone       String
+  company     String?
+  message     String
+  productId   String?
+  productName String?
+  productSlug String?
+  locale      String   @default("id")
+  source      String   @default("website_form")
+  createdAt   DateTime @default(now())
+
+  @@index([email])
+  @@index([productId])
+  @@index([createdAt])
+}
