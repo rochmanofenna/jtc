@@ -4,6 +4,10 @@ import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { ProductGrid } from "@/components/catalog/product-grid";
+import {
+  getDescendantCategoryIds,
+  getDescendantIdsForSlug,
+} from "@/lib/category-tree";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 export async function generateMetadata({
@@ -50,16 +54,16 @@ export default async function ProductsPage({
 
   const t = await getTranslations();
 
-  // Fetch all top-level categories with children for subcategory-inclusive counts
-  const categoriesRaw = await prisma.category.findMany({
+  // Fetch top-level (super) categories. Counts walk the FULL descendant tree
+  // (super → mid → leaf) so each sidebar item reflects every product underneath.
+  const superCategoriesRaw = await prisma.category.findMany({
     where: { parentId: null },
-    include: { children: { select: { id: true } } },
     orderBy: { sortOrder: "asc" },
   });
 
   const categories = await Promise.all(
-    categoriesRaw.map(async (cat) => {
-      const ids = [cat.id, ...cat.children.map((c: any) => c.id)];
+    superCategoriesRaw.map(async (cat) => {
+      const ids = await getDescendantCategoryIds(cat.id);
       const count = await prisma.product.count({
         where: { categoryId: { in: ids }, isActive: true },
       });
@@ -67,7 +71,7 @@ export default async function ProductsPage({
     })
   );
 
-  // Resolve category for filtering (include subcategories)
+  // Resolve category for filtering (include all descendants at any depth)
   let activeCategoryName: string | undefined;
   if (categorySlug) {
     const cat = await prisma.category.findUnique({
@@ -81,12 +85,8 @@ export default async function ProductsPage({
   // Build product query
   const where: any = { isActive: true };
   if (categorySlug) {
-    const cat = await prisma.category.findUnique({
-      where: { slug: categorySlug },
-      include: { children: { select: { id: true } } },
-    });
-    if (cat) {
-      const ids = [cat.id, ...cat.children.map((c: any) => c.id)];
+    const ids = await getDescendantIdsForSlug(categorySlug);
+    if (ids) {
       where.categoryId = { in: ids };
     }
   }

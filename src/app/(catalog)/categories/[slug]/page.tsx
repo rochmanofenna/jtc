@@ -7,6 +7,7 @@ import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { ProductGrid } from "@/components/catalog/product-grid";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getDescendantCategoryIds } from "@/lib/category-tree";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export async function generateMetadata({
@@ -51,7 +52,6 @@ export default async function CategoryPage({
     where: { slug },
     include: {
       children: {
-        include: { _count: { select: { products: true } } },
         orderBy: { sortOrder: "asc" },
       },
       parent: { select: { name: true, slug: true } },
@@ -62,8 +62,22 @@ export default async function CategoryPage({
     notFound();
   }
 
-  // Find all category IDs to include (self + children)
-  const categoryIds = [category.id, ...category.children.map((c: any) => c.id)];
+  // Walk the FULL descendant tree so super-categories (PPE, Construction
+  // Tools, Electric Supply) aggregate every product underneath them, not
+  // just the products directly attached one level down.
+  const categoryIds = await getDescendantCategoryIds(category.id);
+
+  // For the subcategory pills, count each child's own deep descendant total
+  // so the badge reflects "products visible after clicking this subcategory".
+  const childrenWithCounts = await Promise.all(
+    category.children.map(async (child) => {
+      const childIds = await getDescendantCategoryIds(child.id);
+      const count = await prisma.product.count({
+        where: { categoryId: { in: childIds }, isActive: true },
+      });
+      return { ...child, productCount: count };
+    })
+  );
 
   const [products, totalCount] = await Promise.all([
     prisma.product.findMany({
@@ -133,9 +147,9 @@ export default async function CategoryPage({
       </div>
 
       {/* ── Subcategory pills ───────────────────────────────────── */}
-      {category.children.length > 0 && (
+      {childrenWithCounts.length > 0 && (
         <div className="mb-8 flex flex-wrap gap-2">
-          {category.children.map((child: any) => (
+          {childrenWithCounts.map((child) => (
             <Link key={child.id} href={`/categories/${child.slug}`}>
               <Badge
                 variant="secondary"
@@ -143,7 +157,7 @@ export default async function CategoryPage({
               >
                 {child.name}
                 <span className="ml-1.5 text-xs text-muted-foreground">
-                  ({child._count.products})
+                  ({child.productCount})
                 </span>
               </Badge>
             </Link>
