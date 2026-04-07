@@ -39,6 +39,9 @@
     "ctaWhatsApp": "Hubungi via WhatsApp"
   },
   "categories": {
+    "ppe": "Alat Pelindung Diri",
+    "construction-tools": "Peralatan Konstruksi",
+    "electric-supply": "Peralatan Listrik",
     "safety-helmets": "Helm Safety",
     "masks-respirators": "Masker & Respirator",
     "body-harnesses": "Body Harness & Pelindung Jatuh",
@@ -76,6 +79,31 @@
     "moq": "Minimum Order",
     "unit": "Satuan",
     "verified": "Terverifikasi"
+  },
+  "quoteForm": {
+    "title": "Minta Penawaran",
+    "subtitle": "Isi data Anda dan tim kami akan menghubungi dalam 24 jam.",
+    "name": "Nama Lengkap",
+    "namePlaceholder": "Masukkan nama Anda",
+    "email": "Email",
+    "emailPlaceholder": "nama@perusahaan.com",
+    "phone": "Nomor Telepon",
+    "phonePlaceholder": "+62 812 XXXX XXXX",
+    "company": "Nama Perusahaan",
+    "companyOptional": "(opsional)",
+    "companyPlaceholder": "Nama perusahaan Anda",
+    "message": "Apa yang Anda butuhkan?",
+    "messagePlaceholder": "Sertakan nama produk, jumlah, lokasi pengiriman, dan detail lainnya.",
+    "product": "Produk",
+    "sku": "Kode Produk",
+    "submit": "Kirim via WhatsApp",
+    "sending": "Membuka WhatsApp...",
+    "cancel": "Batal",
+    "errorRequired": "Kolom ini wajib diisi",
+    "errorEmail": "Mohon masukkan email yang valid",
+    "errorPhone": "Mohon masukkan nomor telepon yang valid",
+    "errorMessage": "Mohon jelaskan kebutuhan Anda (minimal 10 karakter)",
+    "success": "Membuka WhatsApp..."
   },
   "whyUs": {
     "title": "Mengapa Memilih Kami",

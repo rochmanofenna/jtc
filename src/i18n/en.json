@@ -39,6 +39,9 @@
     "ctaWhatsApp": "Contact via WhatsApp"
   },
   "categories": {
+    "ppe": "Personal Protective Equipment",
+    "construction-tools": "Construction Tools",
+    "electric-supply": "Electric Supply",
     "safety-helmets": "Safety Helmets",
     "masks-respirators": "Masks & Respirators",
     "body-harnesses": "Body Harnesses & Fall Protection",
@@ -76,6 +79,31 @@
     "moq": "Minimum Order",
     "unit": "Unit",
     "verified": "Verified"
+  },
+  "quoteForm": {
+    "title": "Request a Quote",
+    "subtitle": "Fill in your details and we'll get back to you within 24 hours.",
+    "name": "Full Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Email",
+    "emailPlaceholder": "name@company.com",
+    "phone": "Phone Number",
+    "phonePlaceholder": "+62 812 XXXX XXXX",
+    "company": "Company Name",
+    "companyOptional": "(optional)",
+    "companyPlaceholder": "Your company name",
+    "message": "What are you looking for?",
+    "messagePlaceholder": "Include product names, quantities, delivery location, and any other details.",
+    "product": "Product",
+    "sku": "SKU",
+    "submit": "Send via WhatsApp",
+    "sending": "Opening WhatsApp...",
+    "cancel": "Cancel",
+    "errorRequired": "This field is required",
+    "errorEmail": "Please enter a valid email",
+    "errorPhone": "Please enter a valid phone number",
+    "errorMessage": "Please describe what you need (at least 10 characters)",
+    "success": "Opening WhatsApp..."
   },
   "whyUs": {
     "title": "Why Choose Us",
