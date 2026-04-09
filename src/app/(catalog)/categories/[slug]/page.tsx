@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { ProductGrid } from "@/components/catalog/product-grid";
-import { Badge } from "@/components/ui/badge";
+import { CategoryCard } from "@/components/catalog/category-card";
 import { Button } from "@/components/ui/button";
 import { getDescendantCategoryIds } from "@/lib/category-tree";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -62,46 +62,67 @@ export default async function CategoryPage({
     notFound();
   }
 
-  // Walk the FULL descendant tree so super-categories (PPE, Construction
-  // Tools, Electric Supply) aggregate every product underneath them, not
-  // just the products directly attached one level down.
-  const categoryIds = await getDescendantCategoryIds(category.id);
+  // Branch on whether this category has subcategories. Categories with
+  // children (e.g. PPE, Safety Helmets) render a grid of child CategoryCards
+  // so the user can drill down. Leaf categories (e.g. Fiberglass Helmets,
+  // Welding Equipment) render the product listing directly.
+  const hasChildren = category.children.length > 0;
 
-  // For the subcategory pills, count each child's own deep descendant total
-  // so the badge reflects "products visible after clicking this subcategory".
-  const childrenWithCounts = await Promise.all(
-    category.children.map(async (child) => {
-      const childIds = await getDescendantCategoryIds(child.id);
-      const count = await prisma.product.count({
-        where: { categoryId: { in: childIds }, isActive: true },
-      });
-      return { ...child, productCount: count };
-    })
-  );
+  // Per-child deep counts — only needed when we're rendering the card grid.
+  // Each count walks the child's full subtree, so "Safety Helmets → 6" means
+  // 6 products across Fiberglass/ABS/PE/Accessories leaves combined.
+  const childrenWithCounts = hasChildren
+    ? await Promise.all(
+        category.children.map(async (child) => {
+          const childIds = await getDescendantCategoryIds(child.id);
+          const count = await prisma.product.count({
+            where: { categoryId: { in: childIds }, isActive: true },
+          });
+          return { ...child, productCount: count };
+        })
+      )
+    : [];
 
-  const [products, totalCount] = await Promise.all([
-    prisma.product.findMany({
-      where: {
-        isActive: true,
-        categoryId: { in: categoryIds },
-      },
-      include: {
-        images: { orderBy: { sortOrder: "asc" }, take: 1 },
-        category: { select: { name: true, slug: true } },
-      },
-      orderBy: { sortOrder: "asc" },
-      skip: (pageNum - 1) * ITEMS_PER_PAGE,
-      take: ITEMS_PER_PAGE,
-    }),
-    prisma.product.count({
-      where: {
-        isActive: true,
-        categoryId: { in: categoryIds },
-      },
-    }),
-  ]);
+  // For leaf categories we fetch the product grid + paginated count.
+  // For subcategory grids we skip the expensive product query entirely and
+  // derive the header total by summing the already-computed child counts.
+  let products: Awaited<ReturnType<typeof prisma.product.findMany>> = [];
+  let totalCount = 0;
+  if (hasChildren) {
+    totalCount = childrenWithCounts.reduce(
+      (sum, c) => sum + c.productCount,
+      0
+    );
+  } else {
+    const categoryIds = await getDescendantCategoryIds(category.id);
+    const [leafProducts, leafCount] = await Promise.all([
+      prisma.product.findMany({
+        where: {
+          isActive: true,
+          categoryId: { in: categoryIds },
+        },
+        include: {
+          images: { orderBy: { sortOrder: "asc" }, take: 1 },
+          category: { select: { name: true, slug: true } },
+        },
+        orderBy: { sortOrder: "asc" },
+        skip: (pageNum - 1) * ITEMS_PER_PAGE,
+        take: ITEMS_PER_PAGE,
+      }),
+      prisma.product.count({
+        where: {
+          isActive: true,
+          categoryId: { in: categoryIds },
+        },
+      }),
+    ]);
+    products = leafProducts;
+    totalCount = leafCount;
+  }
 
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+  const totalPages = hasChildren
+    ? 0
+    : Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   function pageUrl(page: number) {
     return `/categories/${slug}${page > 1 ? `?page=${page}` : ""}`;
@@ -142,103 +163,103 @@ export default async function CategoryPage({
           <p className="text-muted-foreground">{category.nameCn}</p>
         )}
         <p className="text-sm text-muted-foreground">
-          {totalCount} {totalCount === 1 ? "product" : "products"} found
+          {hasChildren
+            ? `${totalCount} ${totalCount === 1 ? "product" : "products"} across ${childrenWithCounts.length} ${childrenWithCounts.length === 1 ? "category" : "categories"}`
+            : `${totalCount} ${totalCount === 1 ? "product" : "products"} found`}
         </p>
       </div>
 
-      {/* ── Subcategory pills ───────────────────────────────────── */}
-      {childrenWithCounts.length > 0 && (
-        <div className="mb-8 flex flex-wrap gap-2">
+      {hasChildren ? (
+        /* ── Subcategory card grid ────────────────────────────── */
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-5">
           {childrenWithCounts.map((child) => (
-            <Link key={child.id} href={`/categories/${child.slug}`}>
-              <Badge
-                variant="secondary"
-                className="px-3 py-1 text-sm hover:bg-secondary/80"
-              >
-                {child.name}
-                <span className="ml-1.5 text-xs text-muted-foreground">
-                  ({child.productCount})
-                </span>
-              </Badge>
-            </Link>
+            <CategoryCard
+              key={child.id}
+              category={child}
+              productCount={child.productCount}
+            />
           ))}
         </div>
-      )}
+      ) : (
+        <>
+          {/* ── Product grid ────────────────────────────────────── */}
+          <ProductGrid products={products} />
 
-      {/* ── Product grid ────────────────────────────────────────── */}
-      <ProductGrid products={products} />
+          {/* ── Pagination ──────────────────────────────────────── */}
+          {totalPages > 1 && (
+            <nav className="mt-8 flex items-center justify-center gap-2">
+              {pageNum > 1 ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  render={<Link href={pageUrl(pageNum - 1)} />}
+                >
+                  <ChevronLeft className="size-4" />
+                  Previous
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" disabled>
+                  <ChevronLeft className="size-4" />
+                  Previous
+                </Button>
+              )}
 
-      {/* ── Pagination ──────────────────────────────────────────── */}
-      {totalPages > 1 && (
-        <nav className="mt-8 flex items-center justify-center gap-2">
-          {pageNum > 1 ? (
-            <Button
-              variant="outline"
-              size="sm"
-              render={<Link href={pageUrl(pageNum - 1)} />}
-            >
-              <ChevronLeft className="size-4" />
-              Previous
-            </Button>
-          ) : (
-            <Button variant="outline" size="sm" disabled>
-              <ChevronLeft className="size-4" />
-              Previous
-            </Button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter((p) => {
+                    return (
+                      p === 1 ||
+                      p === totalPages ||
+                      Math.abs(p - pageNum) <= 1
+                    );
+                  })
+                  .map((p, idx, arr) => {
+                    const elements = [];
+                    if (idx > 0 && p - arr[idx - 1] > 1) {
+                      elements.push(
+                        <span
+                          key={`ellipsis-${p}`}
+                          className="px-1 text-muted-foreground"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    elements.push(
+                      <Link
+                        key={p}
+                        href={pageUrl(p)}
+                        className={`flex size-8 items-center justify-center rounded-md text-sm transition-colors ${
+                          p === pageNum
+                            ? "bg-primary text-primary-foreground"
+                            : "hover:bg-muted"
+                        }`}
+                      >
+                        {p}
+                      </Link>
+                    );
+                    return elements;
+                  })}
+              </div>
+
+              {pageNum < totalPages ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  render={<Link href={pageUrl(pageNum + 1)} />}
+                >
+                  Next
+                  <ChevronRight className="size-4" />
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" disabled>
+                  Next
+                  <ChevronRight className="size-4" />
+                </Button>
+              )}
+            </nav>
           )}
-
-          <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1)
-              .filter((p) => {
-                return (
-                  p === 1 || p === totalPages || Math.abs(p - pageNum) <= 1
-                );
-              })
-              .map((p, idx, arr) => {
-                const elements = [];
-                if (idx > 0 && p - arr[idx - 1] > 1) {
-                  elements.push(
-                    <span
-                      key={`ellipsis-${p}`}
-                      className="px-1 text-muted-foreground"
-                    >
-                      ...
-                    </span>
-                  );
-                }
-                elements.push(
-                  <Link
-                    key={p}
-                    href={pageUrl(p)}
-                    className={`flex size-8 items-center justify-center rounded-md text-sm transition-colors ${
-                      p === pageNum
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-muted"
-                    }`}
-                  >
-                    {p}
-                  </Link>
-                );
-                return elements;
-              })}
-          </div>
-
-          {pageNum < totalPages ? (
-            <Button
-              variant="outline"
-              size="sm"
-              render={<Link href={pageUrl(pageNum + 1)} />}
-            >
-              Next
-              <ChevronRight className="size-4" />
-            </Button>
-          ) : (
-            <Button variant="outline" size="sm" disabled>
-              Next
-              <ChevronRight className="size-4" />
-            </Button>
-          )}
-        </nav>
+        </>
       )}
     </div>
   );
