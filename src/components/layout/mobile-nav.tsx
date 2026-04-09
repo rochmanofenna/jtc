@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { ChevronDown } from "lucide-react";
 import {
   Sheet,
   SheetTrigger,
@@ -11,34 +13,34 @@ import {
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { formatWhatsAppUrl } from "@/lib/utils";
-
-const categories = [
-  { slug: "safety-helmets", key: "safety-helmets" },
-  { slug: "masks-respirators", key: "masks-respirators" },
-  { slug: "body-harnesses", key: "body-harnesses" },
-  { slug: "reflective-vests", key: "reflective-vests" },
-  { slug: "rainwear", key: "rainwear" },
-  { slug: "protective-clothing", key: "protective-clothing" },
-  { slug: "gloves", key: "gloves" },
-  { slug: "safety-footwear", key: "safety-footwear" },
-  { slug: "welding-equipment", key: "welding-equipment" },
-  { slug: "life-safety", key: "life-safety" },
-  { slug: "anti-static", key: "anti-static" },
-  { slug: "power-tools-battery", key: "power-tools-battery" },
-  { slug: "power-tools-ac", key: "power-tools-ac" },
-  { slug: "cutting-grinding-discs", key: "cutting-grinding-discs" },
-  { slug: "tapes-ties-packaging", key: "tapes-ties-packaging" },
-  { slug: "woven-products", key: "woven-products" },
-  { slug: "traffic-safety", key: "traffic-safety" },
-  { slug: "site-equipment", key: "site-equipment" },
-] as const;
+import type { CategoryMenuItem } from "@/lib/category-menu";
 
 interface MobileNavProps {
   children: React.ReactNode;
+  categoryMenu: CategoryMenuItem[];
 }
 
-export function MobileNav({ children }: MobileNavProps) {
+/**
+ * Mobile hamburger drawer. Renders the 3 super categories as expandable
+ * sections — tapping PPE expands the list of its 10 mid-categories without
+ * navigating. Tapping a mid-category closes the sheet and navigates to
+ * that category page.
+ *
+ * Takes the category tree as a prop so the data is fetched once per
+ * request by a server component parent (see src/lib/category-menu.ts).
+ */
+export function MobileNav({ children, categoryMenu }: MobileNavProps) {
   const t = useTranslations();
+  const locale = useLocale();
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  function toggle(slug: string) {
+    setExpanded((prev) => (prev === slug ? null : slug));
+  }
+
+  function localizedName(item: { name: string; nameCn: string | null }) {
+    return locale === "cn" && item.nameCn ? item.nameCn : item.name;
+  }
 
   return (
     <Sheet>
@@ -103,21 +105,64 @@ export function MobileNav({ children }: MobileNavProps) {
             {t("nav.categories")}
           </p>
 
-          {/* Category links */}
-          <nav className="flex flex-col gap-3 overflow-y-auto flex-1">
-            {categories.map((cat) => (
-              <SheetClose
-                key={cat.slug}
-                render={
-                  <Link
-                    href={`/categories/${cat.slug}`}
-                    className="font-display text-lg text-gray-400 hover:text-white transition-colors"
-                  />
-                }
-              >
-                {t(`categories.${cat.key}`)}
-              </SheetClose>
-            ))}
+          {/* Expandable super categories */}
+          <nav className="flex flex-col overflow-y-auto flex-1">
+            {categoryMenu.map((sup) => {
+              const isExpanded = expanded === sup.slug;
+              return (
+                <div key={sup.slug} className="border-b border-navy-800/60">
+                  <button
+                    type="button"
+                    onClick={() => toggle(sup.slug)}
+                    aria-expanded={isExpanded}
+                    className="flex w-full items-center justify-between py-3.5 font-display text-lg text-white transition-colors hover:text-amber-400"
+                  >
+                    <span>
+                      {localizedName(sup)}
+                      <span className="ml-2 font-mono text-xs text-gray-500">
+                        ({sup.productCount})
+                      </span>
+                    </span>
+                    <ChevronDown
+                      className={`size-4 text-gray-400 transition-transform duration-200 ${
+                        isExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {isExpanded && (
+                    <div className="flex flex-col gap-2.5 pb-4 pl-1">
+                      <SheetClose
+                        render={
+                          <Link
+                            href={`/categories/${sup.slug}`}
+                            className="font-body text-sm font-medium text-amber-500 transition-colors hover:text-amber-400"
+                          />
+                        }
+                      >
+                        {t("common.viewAll")} {localizedName(sup)}
+                      </SheetClose>
+                      {sup.children.map((child) => (
+                        <SheetClose
+                          key={child.slug}
+                          render={
+                            <Link
+                              href={`/categories/${child.slug}`}
+                              className="font-body text-sm text-gray-400 transition-colors hover:text-white"
+                            />
+                          }
+                        >
+                          {localizedName(child)}
+                          <span className="ml-1 font-mono text-[10px] text-gray-500">
+                            ({child.productCount})
+                          </span>
+                        </SheetClose>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
 
           {/* Bottom section */}

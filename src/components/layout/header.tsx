@@ -1,19 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
-import { Search } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { Search, ChevronDown } from "lucide-react";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import type { CategoryMenuItem } from "@/lib/category-menu";
 
-export function Header() {
+interface HeaderProps {
+  categoryMenu: CategoryMenuItem[];
+}
+
+export function Header({ categoryMenu }: HeaderProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     function onScroll() {
@@ -21,6 +29,13 @@ export function Header() {
     }
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Clean up any pending close timer on unmount.
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
   }, []);
 
   function handleSearchSubmit(e: React.FormEvent) {
@@ -34,6 +49,26 @@ export function Header() {
     setSearchOpen(false);
   }
 
+  // Mega-menu hover handlers — a small open delay prevents accidental flashes
+  // when the mouse just grazes the nav link, and a close delay lets the
+  // cursor travel from the trigger to the menu without the menu disappearing.
+  function openMenu() {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setMenuOpen(true);
+  }
+
+  function scheduleCloseMenu() {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = setTimeout(() => setMenuOpen(false), 150);
+  }
+
+  function localizedName(item: { name: string; nameCn: string | null }) {
+    return locale === "cn" && item.nameCn ? item.nameCn : item.name;
+  }
+
   return (
     <header
       className={`sticky top-0 z-50 bg-navy-900 text-white transition-shadow duration-200 ${
@@ -43,7 +78,7 @@ export function Header() {
       <div className="container-wide flex h-16 items-center gap-6 lg:h-[72px]">
         {/* Mobile hamburger */}
         <div className="lg:hidden">
-          <MobileNav>
+          <MobileNav categoryMenu={categoryMenu}>
             <button
               type="button"
               className="flex flex-col justify-center gap-[5px] p-2 text-white hover:text-amber-400 transition-colors"
@@ -68,9 +103,71 @@ export function Header() {
         {/* Desktop nav links */}
         <nav className="hidden items-center gap-8 lg:flex lg:ml-10">
           <NavLink href="/products">{t("nav.products")}</NavLink>
-          <NavLink href="/categories/safety-helmets">
-            {t("nav.categories")}
-          </NavLink>
+
+          {/* Categories mega-menu */}
+          <div
+            className="relative"
+            onMouseEnter={openMenu}
+            onMouseLeave={scheduleCloseMenu}
+          >
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-expanded={menuOpen}
+              aria-haspopup="true"
+              className="group relative flex items-center gap-1 font-display text-xs font-medium uppercase tracking-wide text-gray-400 hover:text-white transition-colors"
+            >
+              <span>{t("nav.categories")}</span>
+              <ChevronDown
+                className={`size-3 transition-transform duration-200 ${
+                  menuOpen ? "rotate-180" : ""
+                }`}
+              />
+              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-amber-500 transition-all duration-200 group-hover:w-[calc(100%-14px)]" />
+            </button>
+
+            {menuOpen && (
+              <div
+                className="absolute left-1/2 top-full z-50 w-[min(720px,calc(100vw-2rem))] -translate-x-1/2 pt-3"
+                onMouseEnter={openMenu}
+                onMouseLeave={scheduleCloseMenu}
+              >
+                <div className="grid grid-cols-3 gap-5 rounded-xl bg-white p-6 text-gray-900 shadow-2xl ring-1 ring-black/5">
+                  {categoryMenu.map((sup) => (
+                    <div key={sup.id} className="min-w-0">
+                      <Link
+                        href={`/categories/${sup.slug}`}
+                        onClick={() => setMenuOpen(false)}
+                        className="block font-display text-sm font-bold uppercase tracking-wide text-gray-900 transition-colors hover:text-amber-600"
+                      >
+                        {localizedName(sup)}
+                        <span className="ml-1.5 font-mono text-[10px] font-normal text-gray-400">
+                          ({sup.productCount})
+                        </span>
+                      </Link>
+                      <div className="mt-2 mb-3 h-px bg-gray-200" />
+                      <ul className="space-y-1.5">
+                        {sup.children.map((child) => (
+                          <li key={child.id}>
+                            <Link
+                              href={`/categories/${child.slug}`}
+                              onClick={() => setMenuOpen(false)}
+                              className="block font-body text-sm text-gray-500 transition-colors hover:text-amber-600"
+                            >
+                              {localizedName(child)}
+                              <span className="ml-1 font-mono text-[10px] text-gray-400">
+                                ({child.productCount})
+                              </span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </nav>
 
         {/* Right section */}

@@ -8,9 +8,11 @@ import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { formatWhatsAppUrl } from "@/lib/utils";
 import { SuperCategoryCard } from "@/components/catalog/super-category-card";
 import { getDescendantCategoryIds } from "@/lib/category-tree";
+import { getCategoryMenuData } from "@/lib/category-menu";
 
 export default async function HomePage() {
   const t = await getTranslations();
+  const categoryMenu = await getCategoryMenuData();
 
   // Get the 3 super-parent categories (PPE, Construction Tools, Electric Supply)
   const superCategoriesRaw = await prisma.category.findMany({
@@ -40,7 +42,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header categoryMenu={categoryMenu} />
       <main className="flex-1">
         {/* ── Hero ────────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden bg-navy-950 min-h-[70vh] lg:min-h-[85vh] flex items-center">

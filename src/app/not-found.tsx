@@ -3,13 +3,15 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
+import { getCategoryMenuData } from "@/lib/category-menu";
 
 export default async function NotFound() {
   const t = await getTranslations("404");
+  const categoryMenu = await getCategoryMenuData();
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header categoryMenu={categoryMenu} />
       <main className="flex flex-1 flex-col items-center justify-center px-4 text-center">
         <div className="mx-auto max-w-md space-y-6">
           <div className="space-y-2">
