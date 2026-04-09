@@ -4,10 +4,9 @@ import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { ProductGrid } from "@/components/catalog/product-grid";
-import {
-  getDescendantCategoryIds,
-  getDescendantIdsForSlug,
-} from "@/lib/category-tree";
+import { ProductsSidebar } from "@/components/catalog/products-sidebar";
+import { getDescendantIdsForSlug } from "@/lib/category-tree";
+import { getCategoryMenuData } from "@/lib/category-menu";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 export async function generateMetadata({
@@ -54,22 +53,11 @@ export default async function ProductsPage({
 
   const t = await getTranslations();
 
-  // Fetch top-level (super) categories. Counts walk the FULL descendant tree
-  // (super → mid → leaf) so each sidebar item reflects every product underneath.
-  const superCategoriesRaw = await prisma.category.findMany({
-    where: { parentId: null },
-    orderBy: { sortOrder: "asc" },
-  });
-
-  const categories = await Promise.all(
-    superCategoriesRaw.map(async (cat) => {
-      const ids = await getDescendantCategoryIds(cat.id);
-      const count = await prisma.product.count({
-        where: { categoryId: { in: ids }, isActive: true },
-      });
-      return { ...cat, productCount: count };
-    })
-  );
+  // Fetch the 3 super categories with their mid-level children and deep
+  // product counts — shared by both the mobile pill nav and the desktop
+  // expandable sidebar. Counts walk the FULL descendant tree so each figure
+  // reflects every product underneath the category.
+  const categoryMenu = await getCategoryMenuData();
 
   // Resolve category for filtering (include all descendants at any depth)
   let activeCategoryName: string | undefined;
@@ -186,7 +174,8 @@ export default async function ProductsPage({
       <div className="flex flex-col gap-8 lg:flex-row">
         {/* Sidebar (desktop) / Pill nav (mobile) */}
         <aside className="shrink-0 lg:w-56">
-          {/* Mobile: horizontal pills */}
+          {/* Mobile: horizontal pills (super categories only — the mobile
+              hamburger drawer handles hierarchical navigation instead) */}
           <div className="flex gap-2 overflow-x-auto pb-3 lg:hidden">
             <Link
               href={buildUrl({ category: undefined, page: undefined })}
@@ -198,7 +187,7 @@ export default async function ProductsPage({
             >
               {t("common.all")}
             </Link>
-            {categories.map((cat: any) => (
+            {categoryMenu.map((cat) => (
               <Link
                 key={cat.id}
                 href={buildUrl({ category: cat.slug, page: undefined })}
@@ -213,39 +202,13 @@ export default async function ProductsPage({
             ))}
           </div>
 
-          {/* Desktop: vertical sidebar */}
+          {/* Desktop: expandable vertical sidebar */}
           <div className="hidden lg:block">
-            <h3 className="font-display text-xs font-semibold uppercase tracking-[0.15em] text-gray-500 mb-4">
-              {t("filter.category")}
-            </h3>
-            <nav className="flex flex-col">
-              <Link
-                href={buildUrl({ category: undefined, page: undefined })}
-                className={`font-body text-sm py-1.5 transition-colors ${
-                  !categorySlug
-                    ? "text-gray-900 font-medium border-l-2 border-amber-500 pl-3"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                {t("common.all")}
-              </Link>
-              {categories.map((cat: any) => (
-                <Link
-                  key={cat.id}
-                  href={buildUrl({ category: cat.slug, page: undefined })}
-                  className={`flex items-center justify-between py-1.5 transition-colors ${
-                    categorySlug === cat.slug
-                      ? "text-gray-900 font-medium border-l-2 border-amber-500 pl-3"
-                      : "font-body text-sm text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  <span className="font-body text-sm">{cat.name}</span>
-                  <span className="font-mono text-xs text-gray-400">
-                    {cat.productCount}
-                  </span>
-                </Link>
-              ))}
-            </nav>
+            <ProductsSidebar
+              categoryMenu={categoryMenu}
+              activeSlug={categorySlug}
+              search={search}
+            />
           </div>
         </aside>
 
