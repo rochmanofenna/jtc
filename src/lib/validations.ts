@@ -80,15 +80,14 @@ export type ProductQuery = z.infer<typeof productQuerySchema>;
 // ─── Quote Inquiry ──────────────────────────────────────────────────────────
 
 export const createQuoteInquirySchema = z.object({
-  name: z.string().min(2, "Name is required"),
+  companyName: z.string().min(2, "Company name is required"),
+  address: z.string().min(10, "Full address with postal code is required"),
   email: z.string().email("Valid email is required"),
   phone: z.string().min(8, "Valid phone number is required"),
-  company: z.string().optional(),
+  npwp: z.string().optional().or(z.literal("")),
+  ktpSim: z.string().optional().or(z.literal("")),
   message: z.string().min(10, "Please describe what you need"),
-  productId: z.string().optional(),
-  productName: z.string().optional(),
   productSlug: z.string().optional(),
-  locale: z.enum(["id", "en", "cn"]).default("id"),
   source: z.string().default("website_form"),
 });
 
