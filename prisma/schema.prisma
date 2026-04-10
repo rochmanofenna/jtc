@@ -261,19 +261,17 @@ model Payment {
 
 model QuoteInquiry {
   id          String   @id @default(cuid())
-  name        String
+  companyName String
+  address     String
   email       String
   phone       String
-  company     String?
+  npwp        String?
+  ktpSim      String?
   message     String
-  productId   String?
-  productName String?
   productSlug String?
-  locale      String   @default("id")
   source      String   @default("website_form")
   createdAt   DateTime @default(now())
 
   @@index([email])
-  @@index([productId])
   @@index([createdAt])
 }
