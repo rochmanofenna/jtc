@@ -248,7 +248,7 @@ export default async function ProductDetailPage({
             <QuoteButton
               productName={product.name}
               productSlug={product.slug}
-              productId={product.id}
+
             />
           </div>
         </div>
@@ -259,7 +259,6 @@ export default async function ProductDetailPage({
         <QuoteButton
           productName={product.name}
           productSlug={product.slug}
-          productId={product.id}
           className="w-full"
         />
       </div>

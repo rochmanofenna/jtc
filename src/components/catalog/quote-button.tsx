@@ -10,20 +10,12 @@ import { QuoteInquiryModal } from "@/components/catalog/quote-inquiry-modal";
 interface QuoteButtonProps {
   productName?: string;
   productSlug?: string;
-  productId?: string;
   className?: string;
 }
 
-/**
- * Primary CTA used on product cards/pages. Tapping it now opens a form modal
- * (QuoteInquiryModal) instead of jumping straight to WhatsApp — that lets us
- * collect the buyer's name, email, phone, and what they actually want before
- * the supplier gets the WhatsApp ping.
- */
 export function QuoteButton({
   productName,
   productSlug,
-  productId,
   className,
 }: QuoteButtonProps) {
   const t = useTranslations("product");
@@ -53,7 +45,6 @@ export function QuoteButton({
         onOpenChange={setOpen}
         productName={productName}
         productSlug={productSlug}
-        productId={productId}
       />
     </>
   );

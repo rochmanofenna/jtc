@@ -25,15 +25,14 @@ export async function POST(request: NextRequest) {
 
     const inquiry = await prisma.quoteInquiry.create({
       data: {
-        name: validated.name,
+        companyName: validated.companyName,
+        address: validated.address,
         email: validated.email,
         phone: validated.phone,
-        company: validated.company || null,
+        npwp: validated.npwp || null,
+        ktpSim: validated.ktpSim || null,
         message: validated.message,
-        productId: validated.productId || null,
-        productName: validated.productName || null,
         productSlug: validated.productSlug || null,
-        locale: validated.locale,
         source: validated.source,
       },
     });

@@ -29,11 +29,11 @@ interface QuoteInquiryModalProps {
   onOpenChange: (open: boolean) => void;
   productName?: string;
   productSlug?: string;
-  productId?: string;
 }
 
 interface FormErrors {
-  name?: string;
+  companyName?: string;
+  address?: string;
   email?: string;
   phone?: string;
   message?: string;
@@ -42,38 +42,29 @@ interface FormErrors {
 const EMAIL_RX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_RX = /^[+]?[\d\s\-()]{8,}$/;
 
-/**
- * Quote-request modal. Replaces the legacy "open WhatsApp directly" flow.
- *
- * Behavior:
- *   1. User fills in name / email / phone / company / message.
- *   2. On submit we validate locally, fire-and-forget a POST to
- *      /api/inquiries to log the lead, and immediately open WhatsApp with
- *      the formatted message — the user never waits for the database write.
- *   3. If opened from a product page, productName + productSlug are baked
- *      into the WhatsApp message as Product / SKU lines.
- */
 export function QuoteInquiryModal({
   open,
   onOpenChange,
   productName,
   productSlug,
-  productId,
 }: QuoteInquiryModalProps) {
   const t = useTranslations("quoteForm");
   const locale = useLocale();
 
-  const [name, setName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [company, setCompany] = useState("");
+  const [npwp, setNpwp] = useState("");
+  const [ktpSim, setKtpSim] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
   function validate(): FormErrors {
     const next: FormErrors = {};
-    if (name.trim().length < 2) next.name = t("errorRequired");
+    if (companyName.trim().length < 2) next.companyName = t("errorRequired");
+    if (address.trim().length < 10) next.address = t("errorAddress");
     if (!EMAIL_RX.test(email.trim())) next.email = t("errorEmail");
     if (!PHONE_RX.test(phone.trim())) next.phone = t("errorPhone");
     if (message.trim().length < 10) next.message = t("errorMessage");
@@ -81,10 +72,12 @@ export function QuoteInquiryModal({
   }
 
   function resetForm() {
-    setName("");
+    setCompanyName("");
+    setAddress("");
     setEmail("");
     setPhone("");
-    setCompany("");
+    setNpwp("");
+    setKtpSim("");
     setMessage("");
     setErrors({});
     setSubmitting(false);
@@ -103,68 +96,56 @@ export function QuoteInquiryModal({
     setErrors({});
 
     const trimmed = {
-      name: name.trim(),
+      companyName: companyName.trim(),
+      address: address.trim(),
       email: email.trim(),
       phone: phone.trim(),
-      company: company.trim() || undefined,
+      npwp: npwp.trim() || undefined,
+      ktpSim: ktpSim.trim() || undefined,
       message: message.trim(),
       productName,
       productSlug,
     };
 
-    // Build the WhatsApp message and URL up front so the open() call is
-    // synchronous and counts as a user gesture (avoids popup blockers).
     const text = buildQuoteInquiryMessage(trimmed, locale);
     const url = formatWhatsAppUrl(WHATSAPP_NUMBER, text);
 
-    // Fire-and-forget the inquiry log. We deliberately do NOT await this:
-    // the WhatsApp tab should open instantly and never block on a network
-    // request. Failures are silently swallowed — the WhatsApp message is
-    // the primary record we care about today.
     void fetch("/api/inquiries", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: trimmed.name,
+        companyName: trimmed.companyName,
+        address: trimmed.address,
         email: trimmed.email,
         phone: trimmed.phone,
-        company: trimmed.company,
+        npwp: trimmed.npwp,
+        ktpSim: trimmed.ktpSim,
         message: trimmed.message,
-        productId: productId,
-        productName: trimmed.productName,
         productSlug: trimmed.productSlug,
-        locale,
         source: "website_form",
       }),
-    }).catch(() => {
-      /* swallow — see comment above */
-    });
+    }).catch(() => {});
 
-    // Open WhatsApp in a new tab.
     window.open(url, "_blank", "noopener,noreferrer");
-
-    // Close the modal and reset for the next inquiry.
     onOpenChange(false);
     resetForm();
   }
 
   function handleOpenChange(next: boolean) {
-    if (!next) {
-      resetForm();
-    }
+    if (!next) resetForm();
     onOpenChange(next);
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-lg">{t("title")}</DialogTitle>
           <DialogDescription>{t("subtitle")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Product context (if any) */}
+          {/* Product context */}
           {productName && (
             <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs">
               <p className="font-mono uppercase tracking-wide text-amber-700 mb-0.5">
@@ -173,32 +154,52 @@ export function QuoteInquiryModal({
               <p className="font-body text-gray-900">{productName}</p>
               {productSlug && (
                 <p className="font-mono text-[11px] text-gray-500 mt-1">
-                  {t("sku")}: {productSlug}
+                  {t("productCode")}: {productSlug}
                 </p>
               )}
             </div>
           )}
 
-          {/* Name */}
+          {/* 1. Company Name (required) */}
           <div className="space-y-1.5">
-            <Label htmlFor="qf-name">
-              {t("name")} <span className="text-destructive">*</span>
+            <Label htmlFor="qf-company">
+              {t("companyName")} <span className="text-destructive">*</span>
             </Label>
             <Input
-              id="qf-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder={t("namePlaceholder")}
-              aria-invalid={!!errors.name}
-              autoComplete="name"
+              id="qf-company"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder={t("companyNamePlaceholder")}
+              aria-invalid={!!errors.companyName}
+              autoComplete="organization"
               required
             />
-            {errors.name && (
-              <p className="text-xs text-destructive">{errors.name}</p>
+            {errors.companyName && (
+              <p className="text-xs text-destructive">{errors.companyName}</p>
             )}
           </div>
 
-          {/* Email */}
+          {/* 2. Address (required, textarea 2 rows) */}
+          <div className="space-y-1.5">
+            <Label htmlFor="qf-address">
+              {t("address")} <span className="text-destructive">*</span>
+            </Label>
+            <Textarea
+              id="qf-address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder={t("addressPlaceholder")}
+              aria-invalid={!!errors.address}
+              rows={2}
+              autoComplete="street-address"
+              required
+            />
+            {errors.address && (
+              <p className="text-xs text-destructive">{errors.address}</p>
+            )}
+          </div>
+
+          {/* 3. Email (required) */}
           <div className="space-y-1.5">
             <Label htmlFor="qf-email">
               {t("email")} <span className="text-destructive">*</span>
@@ -218,7 +219,7 @@ export function QuoteInquiryModal({
             )}
           </div>
 
-          {/* Phone */}
+          {/* 4. Phone (required) */}
           <div className="space-y-1.5">
             <Label htmlFor="qf-phone">
               {t("phone")} <span className="text-destructive">*</span>
@@ -238,24 +239,41 @@ export function QuoteInquiryModal({
             )}
           </div>
 
-          {/* Company (optional) */}
+          {/* 5. NPWP (optional) */}
           <div className="space-y-1.5">
-            <Label htmlFor="qf-company">
-              {t("company")}{" "}
+            <Label htmlFor="qf-npwp">
+              {t("npwp")}{" "}
               <span className="text-xs font-normal text-muted-foreground">
-                {t("companyOptional")}
+                ({t("optional")})
               </span>
             </Label>
             <Input
-              id="qf-company"
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder={t("companyPlaceholder")}
-              autoComplete="organization"
+              id="qf-npwp"
+              value={npwp}
+              onChange={(e) => setNpwp(e.target.value)}
+              placeholder={t("npwpPlaceholder")}
             />
+            <p className="text-xs text-muted-foreground">{t("npwpHelper")}</p>
           </div>
 
-          {/* Message */}
+          {/* 6. KTP/SIM (optional) */}
+          <div className="space-y-1.5">
+            <Label htmlFor="qf-ktpsim">
+              {t("ktpSim")}{" "}
+              <span className="text-xs font-normal text-muted-foreground">
+                ({t("optional")})
+              </span>
+            </Label>
+            <Input
+              id="qf-ktpsim"
+              value={ktpSim}
+              onChange={(e) => setKtpSim(e.target.value)}
+              placeholder={t("ktpSimPlaceholder")}
+            />
+            <p className="text-xs text-muted-foreground">{t("ktpSimHelper")}</p>
+          </div>
+
+          {/* 7. Message (required, textarea 4 rows) */}
           <div className="space-y-1.5">
             <Label htmlFor="qf-message">
               {t("message")} <span className="text-destructive">*</span>

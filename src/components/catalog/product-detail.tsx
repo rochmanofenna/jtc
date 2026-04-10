@@ -136,7 +136,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
             <QuoteButton
               productName={product.name}
               productSlug={product.slug}
-              productId={product.id}
+
             />
           </div>
         </div>
@@ -147,7 +147,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
         <QuoteButton
           productName={product.name}
           productSlug={product.slug}
-          productId={product.id}
+
           className="w-full"
         />
       </div>
