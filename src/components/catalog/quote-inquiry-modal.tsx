@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Loader2, MessageCircle } from "lucide-react";
+import { Loader2, MessageCircle, CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,6 +60,8 @@ export function QuoteInquiryModal({
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const redirectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function validate(): FormErrors {
     const next: FormErrors = {};
@@ -126,19 +128,47 @@ export function QuoteInquiryModal({
       }),
     }).catch(() => {});
 
-    window.open(url, "_blank", "noopener,noreferrer");
-    onOpenChange(false);
-    resetForm();
+    // Show the success confirmation screen for 2 seconds, then open
+    // WhatsApp and close the modal. The setTimeout fires the redirect.
+    setSubmitted(true);
+    redirectTimerRef.current = setTimeout(() => {
+      window.open(url, "_blank", "noopener,noreferrer");
+      onOpenChange(false);
+      resetForm();
+      setSubmitted(false);
+    }, 2000);
   }
 
   function handleOpenChange(next: boolean) {
-    if (!next) resetForm();
+    if (!next) {
+      if (redirectTimerRef.current) clearTimeout(redirectTimerRef.current);
+      resetForm();
+      setSubmitted(false);
+    }
     onOpenChange(next);
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md max-h-[90dvh] overflow-y-auto">
+        {submitted ? (
+          /* ── Success confirmation screen ─────────────────────── */
+          <div className="py-12 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <CheckCircle2 className="size-8 text-green-600" />
+            </div>
+            <h3 className="font-display text-xl font-bold text-gray-900 mb-2">
+              {t("successTitle")}
+            </h3>
+            <p className="font-body text-sm text-gray-500 mb-4">
+              {t("successMessage")}
+            </p>
+            <p className="font-body text-xs text-gray-400">
+              {t("redirecting")}
+            </p>
+          </div>
+        ) : (
+        <>
         <DialogHeader>
           <DialogTitle className="text-lg">{t("title")}</DialogTitle>
           <DialogDescription>{t("subtitle")}</DialogDescription>
@@ -310,6 +340,8 @@ export function QuoteInquiryModal({
             </Button>
           </DialogFooter>
         </form>
+        </>
+        )}
       </DialogContent>
     </Dialog>
   );

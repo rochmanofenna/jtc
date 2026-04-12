@@ -3,6 +3,8 @@ import { DM_Sans, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Toaster } from "@/components/ui/sonner";
+import { QuoteModalProvider } from "@/context/quote-modal-provider";
+import { FloatingQuoteButton } from "@/components/catalog/floating-quote-button";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -60,7 +62,10 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col font-body">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <QuoteModalProvider>
+            {children}
+            <FloatingQuoteButton />
+          </QuoteModalProvider>
           <Toaster position="top-right" />
         </NextIntlClientProvider>
       </body>
