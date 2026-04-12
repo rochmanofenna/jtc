@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { ProductImages } from "@/components/catalog/product-images";
 import { ProductGrid } from "@/components/catalog/product-grid";
 import { QuoteButton } from "@/components/catalog/quote-button";
+import { TrustSignals } from "@/components/catalog/trust-signals";
 
 export async function generateMetadata({
   params,
@@ -248,8 +249,8 @@ export default async function ProductDetailPage({
             <QuoteButton
               productName={product.name}
               productSlug={product.slug}
-
             />
+            <TrustSignals />
           </div>
         </div>
       </div>
