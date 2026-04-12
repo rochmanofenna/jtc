@@ -9,6 +9,9 @@ import { formatWhatsAppUrl } from "@/lib/utils";
 import { SuperCategoryCard } from "@/components/catalog/super-category-card";
 import { getDescendantCategoryIds } from "@/lib/category-tree";
 import { getCategoryMenuData } from "@/lib/category-menu";
+import { TrustSignals } from "@/components/catalog/trust-signals";
+import { HomepageCTAButton } from "@/components/catalog/homepage-cta-button";
+import { FeaturedCarousel } from "@/components/catalog/featured-carousel";
 
 export default async function HomePage() {
   const t = await getTranslations();
@@ -39,6 +42,30 @@ export default async function HomePage() {
 
   const totalProducts = superCategories.reduce((sum, c) => sum + c.productCount, 0);
   const totalCategories = superCategories.length;
+
+  // Featured products — first 12 that have images, for the homepage carousel.
+  const featuredProductsRaw = await prisma.product.findMany({
+    where: {
+      isActive: true,
+      images: { some: {} },
+    },
+    include: {
+      images: { orderBy: { sortOrder: "asc" }, take: 1 },
+      category: { select: { name: true, slug: true } },
+      supplier: { select: { name: true } },
+    },
+    take: 12,
+    orderBy: { sortOrder: "asc" },
+  });
+
+  const featuredProducts = featuredProductsRaw.map((p) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    category: p.category,
+    supplier: p.supplier,
+    imageUrl: p.images[0]?.url ?? null,
+  }));
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -107,6 +134,9 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ── Featured Products Carousel ────────────────────────────── */}
+        <FeaturedCarousel products={featuredProducts} />
 
         {/* ── Super Categories Grid ──────────────────────────────────── */}
         <section className="bg-gray-50 py-20 lg:py-28">
@@ -191,14 +221,7 @@ export default async function HomePage() {
                 {t("cta.readyDescription")}
               </p>
               <div className="mt-8 flex gap-4 flex-col sm:flex-row">
-                <a
-                  href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-amber-500 text-navy-950 font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-sm hover:bg-amber-400 transition-colors text-center"
-                >
-                  {t("cta.whatsapp")}
-                </a>
+                <HomepageCTAButton />
                 <Link
                   href="/products"
                   className="border border-white/20 text-white font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-sm hover:bg-white/5 transition-colors text-center"
@@ -206,6 +229,7 @@ export default async function HomePage() {
                   {t("cta.browseProducts")} →
                 </Link>
               </div>
+              <TrustSignals variant="dark" />
             </div>
           </div>
         </section>

@@ -56,28 +56,22 @@ export function Footer({ locale = "id", messages, navMessages }: FooterProps) {
             </h4>
             <nav className="flex flex-col gap-2.5">
               <Link
-                href="/categories/safety-helmets"
+                href="/categories/ppe"
                 className="font-body text-sm text-gray-400 transition-colors hover:text-white"
               >
-                Safety Helmets
+                PPE
               </Link>
               <Link
-                href="/categories/gloves"
+                href="/categories/construction-tools"
                 className="font-body text-sm text-gray-400 transition-colors hover:text-white"
               >
-                Gloves
+                Construction Tools
               </Link>
               <Link
-                href="/categories/safety-footwear"
+                href="/categories/electric-supply"
                 className="font-body text-sm text-gray-400 transition-colors hover:text-white"
               >
-                Safety Shoes
-              </Link>
-              <Link
-                href="/categories/power-tools-battery"
-                className="font-body text-sm text-gray-400 transition-colors hover:text-white"
-              >
-                Power Tools
+                Electric Supply
               </Link>
               <Link
                 href="/products"

@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Search, ChevronDown } from "lucide-react";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { MobileNav } from "@/components/layout/mobile-nav";
+import { useQuoteModal } from "@/context/quote-modal-provider";
 import type { CategoryMenuItem } from "@/lib/category-menu";
 
 interface HeaderProps {
@@ -22,6 +23,7 @@ export function Header({ categoryMenu }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { open: openQuoteModal } = useQuoteModal();
 
   useEffect(() => {
     function onScroll() {
@@ -187,13 +189,14 @@ export function Header({ categoryMenu }: HeaderProps) {
             <LanguageToggle />
           </div>
 
-          {/* CTA button */}
-          <Link
-            href="/products"
-            className="hidden bg-amber-500 text-navy-950 font-display font-semibold text-xs uppercase tracking-wide px-5 py-2.5 rounded-sm hover:bg-amber-400 transition-colors sm:inline-block"
+          {/* CTA button — opens global quote modal */}
+          <button
+            type="button"
+            onClick={() => openQuoteModal()}
+            className="hidden bg-amber-500 text-navy-950 font-display font-semibold text-xs uppercase tracking-wide px-5 py-2.5 rounded-sm hover:bg-amber-400 transition-colors sm:inline-block cursor-pointer"
           >
-            REQUEST QUOTE
-          </Link>
+            {t("cta.whatsapp")}
+          </button>
         </div>
       </div>
 
