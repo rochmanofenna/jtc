@@ -35,8 +35,8 @@
   "hero": {
     "title": "工业设备与能源解决方案 — 工厂直供",
     "subtitle": "B2B采购平台，连接印尼买家与经过验证的中国供应商。安全装备、电动工具、储能系统和太阳能解决方案，工厂直供价格。",
-    "cta": "浏览目录",
-    "ctaWhatsApp": "通过WhatsApp联系"
+    "cta": "获取工厂价格",
+    "ctaWhatsApp": "联系我们的团队"
   },
   "categories": {
     "ppe": "个人防护装备",
@@ -67,7 +67,8 @@
     "solar-power": "太阳能"
   },
   "product": {
-    "requestQuote": "请求报价",
+    "requestQuote": "获取此产品最优价格",
+    "getQuote": "获取最优价格",
     "material": "材料",
     "specifications": "规格",
     "packaging": "包装",
@@ -109,7 +110,22 @@
     "errorAddress": "请输入完整地址及邮编",
     "errorEmail": "请输入有效的电子邮箱",
     "errorPhone": "请输入有效的电话号码",
-    "errorMessage": "请描述您的需求（至少10个字符）"
+    "errorMessage": "请描述您的需求（至少10个字符）",
+    "successTitle": "请求已成功发送！",
+    "successMessage": "我们的团队将在24小时内通过WhatsApp与您联系。",
+    "redirecting": "正在打开WhatsApp..."
+  },
+  "trust": {
+    "fastResponse": "24小时内回复",
+    "verifiedSuppliers": "直接来自验证供应商",
+    "freeQuote": "免费报价，无任何义务"
+  },
+  "floating": {
+    "getQuote": "立即询价"
+  },
+  "featured": {
+    "label": "精选产品",
+    "subtitle": "来自我们验证供应商的精选产品"
   },
   "whyUs": {
     "title": "为什么选择我们",
@@ -127,10 +143,10 @@
     }
   },
   "cta": {
-    "ready": "准备下单了吗？",
-    "readyDescription": "联系我们的团队获取最优报价。",
-    "whatsapp": "WhatsApp咨询",
-    "browseProducts": "浏览产品"
+    "ready": "今天获取您的报价",
+    "readyDescription": "告诉我们您的需求。我们的团队在24小时内回复。",
+    "whatsapp": "立即请求报价",
+    "browseProducts": "查看所有产品"
   },
   "filter": {
     "title": "筛选",

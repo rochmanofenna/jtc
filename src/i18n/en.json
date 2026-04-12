@@ -35,8 +35,8 @@
   "hero": {
     "title": "Industrial Equipment & Energy Solutions — Direct from Factory",
     "subtitle": "B2B procurement platform connecting Indonesian buyers with verified Chinese suppliers. Safety equipment, power tools, energy storage systems, and solar solutions at factory-direct prices.",
-    "cta": "Browse Catalog",
-    "ctaWhatsApp": "Contact via WhatsApp"
+    "cta": "Get Factory Prices",
+    "ctaWhatsApp": "Talk to Our Team"
   },
   "categories": {
     "ppe": "Personal Protective Equipment",
@@ -67,7 +67,8 @@
     "solar-power": "Solar Power"
   },
   "product": {
-    "requestQuote": "Request Quote",
+    "requestQuote": "Get Best Price for This Product",
+    "getQuote": "Get Best Price",
     "material": "Material",
     "specifications": "Specifications",
     "packaging": "Packaging",
@@ -109,7 +110,22 @@
     "errorAddress": "Please enter your full address with postal code",
     "errorEmail": "Please enter a valid email",
     "errorPhone": "Please enter a valid phone number",
-    "errorMessage": "Please describe what you need (at least 10 characters)"
+    "errorMessage": "Please describe what you need (at least 10 characters)",
+    "successTitle": "Request Sent Successfully!",
+    "successMessage": "Our team will contact you via WhatsApp within 24 hours.",
+    "redirecting": "Opening WhatsApp..."
+  },
+  "trust": {
+    "fastResponse": "Response within 24 hours",
+    "verifiedSuppliers": "Direct from verified suppliers",
+    "freeQuote": "Free quotation, no obligation"
+  },
+  "floating": {
+    "getQuote": "Get Quote Now"
+  },
+  "featured": {
+    "label": "FEATURED PRODUCTS",
+    "subtitle": "Top picks from our verified suppliers"
   },
   "whyUs": {
     "title": "Why Choose Us",
@@ -127,10 +143,10 @@
     }
   },
   "cta": {
-    "ready": "Ready to order?",
-    "readyDescription": "Contact our team for the best pricing.",
-    "whatsapp": "Chat on WhatsApp",
-    "browseProducts": "Browse Products"
+    "ready": "Get Your Quotation Today",
+    "readyDescription": "Tell us what you need. Our team responds within 24 hours.",
+    "whatsapp": "Request Quotation Now",
+    "browseProducts": "View All Products"
   },
   "filter": {
     "title": "Filter",

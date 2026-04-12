@@ -35,8 +35,8 @@
   "hero": {
     "title": "Peralatan Industri & Solusi Energi — Langsung dari Pabrik",
     "subtitle": "Platform pengadaan B2B yang menghubungkan pembeli Indonesia dengan pemasok Tiongkok terverifikasi. Peralatan keselamatan, alat listrik, sistem penyimpanan energi, dan solusi tenaga surya dengan harga langsung pabrik.",
-    "cta": "Jelajahi Katalog",
-    "ctaWhatsApp": "Hubungi via WhatsApp"
+    "cta": "Dapatkan Harga Pabrik",
+    "ctaWhatsApp": "Hubungi Tim Kami"
   },
   "categories": {
     "ppe": "Alat Pelindung Diri",
@@ -67,7 +67,8 @@
     "solar-power": "Tenaga Surya"
   },
   "product": {
-    "requestQuote": "Minta Penawaran",
+    "requestQuote": "Dapatkan Harga Terbaik untuk Produk Ini",
+    "getQuote": "Dapatkan Harga Terbaik",
     "material": "Material",
     "specifications": "Spesifikasi",
     "packaging": "Kemasan",
@@ -109,7 +110,22 @@
     "errorAddress": "Mohon masukkan alamat lengkap dengan kode pos",
     "errorEmail": "Mohon masukkan email yang valid",
     "errorPhone": "Mohon masukkan nomor telepon yang valid",
-    "errorMessage": "Mohon jelaskan kebutuhan Anda (minimal 10 karakter)"
+    "errorMessage": "Mohon jelaskan kebutuhan Anda (minimal 10 karakter)",
+    "successTitle": "Permintaan Berhasil Dikirim!",
+    "successMessage": "Tim kami akan menghubungi Anda via WhatsApp dalam 24 jam.",
+    "redirecting": "Membuka WhatsApp..."
+  },
+  "trust": {
+    "fastResponse": "Respons dalam 24 jam",
+    "verifiedSuppliers": "Langsung dari pemasok terverifikasi",
+    "freeQuote": "Penawaran gratis, tanpa kewajiban"
+  },
+  "floating": {
+    "getQuote": "Minta Penawaran"
+  },
+  "featured": {
+    "label": "PRODUK UNGGULAN",
+    "subtitle": "Pilihan terbaik dari pemasok terverifikasi kami"
   },
   "whyUs": {
     "title": "Mengapa Memilih Kami",
@@ -127,10 +143,10 @@
     }
   },
   "cta": {
-    "ready": "Siap untuk memesan?",
-    "readyDescription": "Hubungi tim kami untuk penawaran harga terbaik.",
-    "whatsapp": "Chat WhatsApp",
-    "browseProducts": "Lihat Produk"
+    "ready": "Dapatkan Penawaran Hari Ini",
+    "readyDescription": "Beritahu kami kebutuhan Anda. Tim kami merespons dalam 24 jam.",
+    "whatsapp": "Minta Penawaran Sekarang",
+    "browseProducts": "Lihat Semua Produk"
   },
   "filter": {
     "title": "Filter",
