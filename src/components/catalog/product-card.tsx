@@ -1,5 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+
+import { useQuoteModal } from "@/context/quote-modal-provider";
 
 interface ProductCardProps {
   product: any;
@@ -7,6 +12,9 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, locale }: ProductCardProps) {
+  const t = useTranslations("product");
+  const { open } = useQuoteModal();
+
   return (
     <Link href={`/products/${product.slug}`} className="group block">
       <div className="overflow-hidden rounded-lg border border-gray-200 bg-white transition-all duration-200 hover:border-gray-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-0.5">
@@ -50,7 +58,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
           {/* Specs line: material + packaging */}
           {(product.material || product.packaging) && (
             <p className="font-body text-xs text-gray-400 line-clamp-1">
-              {[product.material, product.packaging].filter(Boolean).join(' \u00b7 ')}
+              {[product.material, product.packaging].filter(Boolean).join(" \u00b7 ")}
             </p>
           )}
 
@@ -62,6 +70,19 @@ export function ProductCard({ product, locale }: ProductCardProps) {
               </p>
             </div>
           )}
+
+          {/* CTA button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              open({ name: product.name, slug: product.slug });
+            }}
+            className="mt-3 w-full py-2 px-3 bg-amber-500 hover:bg-amber-400 text-[#0a0f1a] text-xs font-display font-semibold uppercase tracking-wide rounded transition-colors duration-200"
+          >
+            {t("getQuote")}
+          </button>
         </div>
       </div>
     </Link>
