@@ -12,6 +12,7 @@ import { getCategoryMenuData } from "@/lib/category-menu";
 import { TrustSignals } from "@/components/catalog/trust-signals";
 import { HomepageCTAButton } from "@/components/catalog/homepage-cta-button";
 import { FeaturedCarousel } from "@/components/catalog/featured-carousel";
+import { HeroProductMontage } from "@/components/catalog/hero-product-montage";
 
 export default async function HomePage() {
   const t = await getTranslations();
@@ -43,22 +44,42 @@ export default async function HomePage() {
   const totalProducts = superCategories.reduce((sum, c) => sum + c.productCount, 0);
   const totalCategories = superCategories.length;
 
-  // Featured products — first 12 that have images, for the homepage carousel.
-  const featuredProductsRaw = await prisma.product.findMany({
-    where: {
-      isActive: true,
-      images: { some: {} },
-    },
-    include: {
-      images: { orderBy: { sortOrder: "asc" }, take: 1 },
-      category: { select: { name: true, slug: true } },
-      supplier: { select: { name: true } },
-    },
-    take: 12,
-    orderBy: { sortOrder: "asc" },
+  // Featured products — pull ~4 per supplier with images, then interleave
+  // so the carousel showcases all three suppliers side by side.
+  const suppliers = await prisma.company.findMany({
+    where: { type: "supplier" },
+    select: { id: true },
   });
 
-  const featuredProducts = featuredProductsRaw.map((p) => ({
+  const perSupplierProducts = await Promise.all(
+    suppliers.map((s) =>
+      prisma.product.findMany({
+        where: {
+          isActive: true,
+          supplierId: s.id,
+          images: { some: {} },
+        },
+        include: {
+          images: { orderBy: { sortOrder: "asc" }, take: 1 },
+          category: { select: { name: true, slug: true } },
+          supplier: { select: { name: true } },
+        },
+        take: 4,
+        orderBy: { sortOrder: "asc" },
+      })
+    )
+  );
+
+  // Interleave: take one from each supplier in round-robin order.
+  const interleaved: typeof perSupplierProducts[0] = [];
+  const maxLen = Math.max(...perSupplierProducts.map((a) => a.length));
+  for (let i = 0; i < maxLen; i++) {
+    for (const bucket of perSupplierProducts) {
+      if (bucket[i]) interleaved.push(bucket[i]);
+    }
+  }
+
+  const featuredProducts = interleaved.slice(0, 12).map((p) => ({
     id: p.id,
     name: p.name,
     slug: p.slug,
@@ -83,7 +104,18 @@ export default async function HomePage() {
             }}
           />
           <div className="container-wide relative w-full">
-            <div className="max-w-3xl">
+            {/* Product montage — desktop right side */}
+            <HeroProductMontage
+              products={featuredProducts
+                .filter((p) => p.imageUrl)
+                .slice(0, 4)
+                .map((p) => ({
+                  name: p.name,
+                  imageUrl: p.imageUrl!,
+                  category: p.category?.name ?? "",
+                }))}
+            />
+            <div className="max-w-3xl lg:max-w-[55%]">
               <h1
                 className="font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-white leading-[1.1]"
                 style={{ animation: "fadeUp 600ms ease-out 200ms both" }}
@@ -139,7 +171,9 @@ export default async function HomePage() {
         <FeaturedCarousel products={featuredProducts} />
 
         {/* ── Super Categories Grid ──────────────────────────────────── */}
-        <section className="bg-gray-50 py-20 lg:py-28">
+        <section className="bg-gray-50 py-12 lg:py-16 relative">
+          {/* Gradient transition from white carousel section above */}
+          <div className="absolute inset-x-0 -top-8 h-8 bg-gradient-to-b from-white to-gray-50" />
           <div className="container-wide">
             <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
               {t("nav.categories")}
@@ -159,7 +193,9 @@ export default async function HomePage() {
         </section>
 
         {/* ── Why Choose Us ──────────────────────────────────────────── */}
-        <section className="bg-navy-900 py-20 lg:py-28">
+        <section className="bg-navy-900 py-12 lg:py-16 relative">
+          {/* Gradient transition from gray categories section above */}
+          <div className="absolute inset-x-0 -top-8 h-8 bg-gradient-to-b from-gray-50 to-navy-900" />
           <div className="container-wide">
             <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
               WHY WORK WITH US
@@ -206,7 +242,7 @@ export default async function HomePage() {
 
         {/* ── CTA ────────────────────────────────────────────────────── */}
         <section
-          className="py-20 lg:py-28"
+          className="py-12 lg:py-16"
           style={{
             background:
               "radial-gradient(ellipse at 0% 100%, rgba(245,158,11,0.06) 0%, transparent 60%), #0a0f1a",

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Package } from "lucide-react";
 import { useQuoteModal } from "@/context/quote-modal-provider";
 
 interface FeaturedProduct {
@@ -42,7 +42,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
   if (products.length === 0) return null;
 
   return (
-    <section className="bg-white py-16 lg:py-20">
+    <section className="bg-white py-12 lg:py-16">
       <div className="container-wide">
         {/* Section header */}
         <div className="flex items-end justify-between mb-8">
@@ -101,7 +101,9 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
                         sizes="(max-width: 640px) 66vw, (max-width: 1024px) 33vw, 25vw"
                       />
                     ) : (
-                      <div className="absolute inset-0 bg-gray-100" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                        <Package className="size-10 text-gray-300" />
+                      </div>
                     )}
                   </div>
                 </Link>
