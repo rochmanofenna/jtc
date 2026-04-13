@@ -13,6 +13,8 @@ import { TrustSignals } from "@/components/catalog/trust-signals";
 import { HomepageCTAButton } from "@/components/catalog/homepage-cta-button";
 import { FeaturedCarousel } from "@/components/catalog/featured-carousel";
 import { HeroProductMontage } from "@/components/catalog/hero-product-montage";
+import { HeroStatsBar } from "@/components/catalog/hero-stats-bar";
+import { AnimateOnScroll } from "@/components/ui/animate-on-scroll";
 
 export default async function HomePage() {
   const t = await getTranslations();
@@ -93,7 +95,7 @@ export default async function HomePage() {
       <Header categoryMenu={categoryMenu} />
       <main className="flex-1">
         {/* ── Hero ────────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden bg-navy-950 min-h-[70vh] lg:min-h-[85vh] flex items-center">
+        <section className="relative overflow-hidden bg-navy-950 min-h-[55vh] sm:min-h-[60vh] lg:min-h-[75vh] flex items-center">
           {/* Grid pattern overlay */}
           <div
             className="pointer-events-none absolute inset-0"
@@ -148,20 +150,13 @@ export default async function HomePage() {
                 </a>
               </div>
               <div
-                className="mt-12 flex gap-8 items-center flex-wrap"
+                className="mt-10"
                 style={{ animation: "fadeUp 600ms ease-out 800ms both" }}
               >
-                <span className="font-mono text-sm text-gray-500">
-                  <span className="text-amber-400">{totalProducts}+</span> Products
-                </span>
-                <span className="w-px h-4 bg-navy-700" aria-hidden="true" />
-                <span className="font-mono text-sm text-gray-500">
-                  <span className="text-white">{totalCategories}</span> Categories
-                </span>
-                <span className="w-px h-4 bg-navy-700" aria-hidden="true" />
-                <span className="font-mono text-sm text-gray-500">
-                  <span className="text-white">Verified</span> Suppliers
-                </span>
+                <HeroStatsBar
+                  totalProducts={totalProducts}
+                  totalCategories={totalCategories}
+                />
               </div>
             </div>
           </div>
@@ -175,18 +170,21 @@ export default async function HomePage() {
           {/* Gradient transition from white carousel section above */}
           <div className="absolute inset-x-0 -top-8 h-8 bg-gradient-to-b from-white to-gray-50" />
           <div className="container-wide">
-            <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
-              {t("nav.categories")}
-            </span>
-            <div className="w-10 h-0.5 bg-amber-500 mt-2 mb-10" />
+            <AnimateOnScroll>
+              <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
+                {t("nav.categories")}
+              </span>
+              <div className="w-10 h-0.5 bg-amber-500 mt-2 mb-10" />
+            </AnimateOnScroll>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-              {superCategories.map((category) => (
-                <SuperCategoryCard
-                  key={category.id}
-                  category={category}
-                  productCount={category.productCount}
-                  subcategoryCount={category.subcategoryCount}
-                />
+              {superCategories.map((category, i) => (
+                <AnimateOnScroll key={category.id} delay={i * 150}>
+                  <SuperCategoryCard
+                    category={category}
+                    productCount={category.productCount}
+                    subcategoryCount={category.subcategoryCount}
+                  />
+                </AnimateOnScroll>
               ))}
             </div>
           </div>
@@ -197,43 +195,55 @@ export default async function HomePage() {
           {/* Gradient transition from gray categories section above */}
           <div className="absolute inset-x-0 -top-8 h-8 bg-gradient-to-b from-gray-50 to-navy-900" />
           <div className="container-wide">
-            <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
-              WHY WORK WITH US
-            </span>
-            <div className="w-10 h-0.5 bg-amber-500 mt-2 mb-10" />
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8">
+            <AnimateOnScroll>
+              <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
+                WHY WORK WITH US
+              </span>
+              <div className="w-10 h-0.5 bg-amber-500 mt-2 mb-8" />
+            </AnimateOnScroll>
+            {/* Horizontal accent line across all 3 cards */}
+            <div className="h-px bg-amber-500/30 mb-8 hidden sm:block" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-0">
               {[
                 {
                   icon: ShieldCheck,
                   titleKey: "whyUs.verified.title" as const,
                   descKey: "whyUs.verified.description" as const,
+                  num: "01",
                 },
                 {
                   icon: Languages,
                   titleKey: "whyUs.multilingual.title" as const,
                   descKey: "whyUs.multilingual.description" as const,
+                  num: "02",
                 },
                 {
                   icon: DollarSign,
                   titleKey: "whyUs.pricing.title" as const,
                   descKey: "whyUs.pricing.description" as const,
+                  num: "03",
                 },
-              ].map((item) => {
+              ].map((item, i) => {
                 const Icon = item.icon;
                 return (
-                  <div
-                    key={item.titleKey}
-                    className="bg-navy-800 border border-navy-700 rounded-sm p-6 lg:p-8"
-                  >
-                    <div className="w-10 h-[3px] bg-amber-500 mb-6" />
-                    <Icon className="text-amber-500 size-5 mb-4" />
-                    <h3 className="font-display text-base font-semibold text-white mb-2">
-                      {t(item.titleKey)}
-                    </h3>
-                    <p className="font-body text-sm text-gray-400 leading-relaxed">
-                      {t(item.descKey)}
-                    </p>
-                  </div>
+                  <AnimateOnScroll key={item.titleKey} delay={i * 150}>
+                    <div
+                      className={`p-6 lg:p-8 ${
+                        i < 2 ? "sm:border-r sm:border-navy-700/50" : ""
+                      } ${i > 0 ? "border-t border-navy-700/50 sm:border-t-0" : ""}`}
+                    >
+                      <span className="font-mono text-3xl font-bold text-navy-700 block mb-4">
+                        {item.num}
+                      </span>
+                      <Icon className="text-amber-500 size-5 mb-4" />
+                      <h3 className="font-display text-base font-semibold text-white mb-2">
+                        {t(item.titleKey)}
+                      </h3>
+                      <p className="font-body text-sm text-gray-400 leading-relaxed">
+                        {t(item.descKey)}
+                      </p>
+                    </div>
+                  </AnimateOnScroll>
                 );
               })}
             </div>
@@ -242,20 +252,17 @@ export default async function HomePage() {
 
         {/* ── CTA ────────────────────────────────────────────────────── */}
         <section
-          className="py-12 lg:py-16"
-          style={{
-            background:
-              "radial-gradient(ellipse at 0% 100%, rgba(245,158,11,0.06) 0%, transparent 60%), #0a0f1a",
-          }}
+          className="py-16 lg:py-20 cta-gradient-bg"
         >
           <div className="container-wide">
-            <div className="max-w-2xl">
-              <h2 className="font-display text-3xl lg:text-4xl font-bold text-white uppercase">
-                {t("cta.ready")}
-              </h2>
-              <p className="font-body text-lg text-gray-400 mt-4">
-                {t("cta.readyDescription")}
-              </p>
+            <AnimateOnScroll>
+              <div className="max-w-2xl">
+                <h2 className="font-display text-4xl lg:text-5xl font-bold text-white uppercase">
+                  {t("cta.ready")}
+                </h2>
+                <p className="font-body text-lg text-gray-400 mt-4">
+                  {t("cta.readyDescription")}
+                </p>
               <div className="mt-8 flex gap-4 flex-col sm:flex-row">
                 <HomepageCTAButton />
                 <Link
@@ -266,7 +273,8 @@ export default async function HomePage() {
                 </Link>
               </div>
               <TrustSignals variant="dark" />
-            </div>
+              </div>
+            </AnimateOnScroll>
           </div>
         </section>
       </main>

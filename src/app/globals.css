@@ -129,6 +129,23 @@
   100% { background-position: 200% 0; }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--rotation, 0deg)); }
+  50% { transform: translateY(-12px) rotate(var(--rotation, 0deg)); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.cta-gradient-bg {
+  background: linear-gradient(135deg, #0a0f1a 0%, #1a2744 25%, #0f1729 50%, #243556 75%, #0a0f1a 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
 @utility container-wide {
   margin-left: auto;
   margin-right: auto;
