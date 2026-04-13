@@ -11,6 +11,7 @@
   /* Font families */
   --font-sans: var(--font-plex-sans);
   --font-display: var(--font-dm-sans);
+  --font-heading: var(--font-dm-sans);
   --font-body: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 

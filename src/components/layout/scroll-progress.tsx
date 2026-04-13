@@ -23,8 +23,8 @@ export function ScrollProgress() {
   return (
     <div className="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none">
       <div
-        className="h-full bg-amber-500 transition-[width] duration-100"
-        style={{ width: `${progress}%` }}
+        className="h-full w-full origin-left bg-amber-500"
+        style={{ transform: `scaleX(${progress / 100})` }}
       />
     </div>
   );

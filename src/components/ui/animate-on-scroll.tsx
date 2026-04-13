@@ -43,7 +43,7 @@ export function AnimateOnScroll({
     <div
       ref={ref}
       className={cn(
-        "transition-all duration-700 ease-out will-change-[transform,opacity]",
+        "transition-[transform,opacity] duration-700 ease-out will-change-[transform,opacity]",
         isVisible
           ? "translate-y-0 translate-x-0 scale-100 opacity-100"
           : hiddenClasses[animation],

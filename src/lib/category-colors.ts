@@ -4,7 +4,7 @@
  *
  * PPE categories → amber-600 (warm, safety)
  * Construction Tools → blue-500 (industrial, technical)
- * Electric Supply → green-500 (energy, power)
+ * Electric Supply → green-600 (energy, power)
  *
  * Falls back to amber-600 for unknown categories.
  */

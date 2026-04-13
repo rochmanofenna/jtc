@@ -7,7 +7,6 @@ import { Footer } from "@/components/layout/footer";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import { formatWhatsAppUrl } from "@/lib/utils";
 import { SuperCategoryCard } from "@/components/catalog/super-category-card";
-import { getDescendantCategoryIds } from "@/lib/category-tree";
 import { getCategoryMenuData } from "@/lib/category-menu";
 import { TrustSignals } from "@/components/catalog/trust-signals";
 import { HomepageCTAButton } from "@/components/catalog/homepage-cta-button";
@@ -20,28 +19,11 @@ export default async function HomePage() {
   const t = await getTranslations();
   const categoryMenu = await getCategoryMenuData();
 
-  // Get the 3 super-parent categories (PPE, Construction Tools, Electric Supply)
-  const superCategoriesRaw = await prisma.category.findMany({
-    where: { parentId: null },
-    include: { children: { select: { id: true } } },
-    orderBy: { sortOrder: "asc" },
-  });
-
-  // For each super, count ALL products in its subtree (any depth) and count
-  // its direct children (mid categories) for the card subtitle.
-  const superCategories = await Promise.all(
-    superCategoriesRaw.map(async (category) => {
-      const allDescendantIds = await getDescendantCategoryIds(category.id);
-      const productCount = await prisma.product.count({
-        where: { categoryId: { in: allDescendantIds }, isActive: true },
-      });
-      return {
-        ...category,
-        productCount,
-        subcategoryCount: category.children.length,
-      };
-    })
-  );
+  // Derive super-category data from the already-fetched menu (no duplicate queries).
+  const superCategories = categoryMenu.map((sup) => ({
+    ...sup,
+    subcategoryCount: sup.children.length,
+  }));
 
   const totalProducts = superCategories.reduce((sum, c) => sum + c.productCount, 0);
   const totalCategories = superCategories.length;

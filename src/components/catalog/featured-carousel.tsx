@@ -87,7 +87,7 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
           <div
             ref={scrollRef}
             className="flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
-            style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+            style={{ scrollbarWidth: "none" }}
           >
           {products.map((product) => (
             <div

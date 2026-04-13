@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import { getDescendantCategoryIds } from "@/lib/category-tree";
 
@@ -27,7 +28,7 @@ export interface CategoryMenuItem {
  * so both surfaces render an accurate, up-to-date category structure
  * without hardcoding any slugs.
  */
-export async function getCategoryMenuData(): Promise<CategoryMenuItem[]> {
+export const getCategoryMenuData = cache(async function getCategoryMenuData(): Promise<CategoryMenuItem[]> {
   const supers = await prisma.category.findMany({
     where: { parentId: null },
     include: {
@@ -70,4 +71,4 @@ export async function getCategoryMenuData(): Promise<CategoryMenuItem[]> {
       };
     })
   );
-}
+});
