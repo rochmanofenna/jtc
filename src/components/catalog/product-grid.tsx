@@ -1,5 +1,6 @@
 import { SearchX } from "lucide-react";
 import { ProductCard } from "@/components/catalog/product-card";
+import { AnimateOnScroll } from "@/components/ui/animate-on-scroll";
 
 interface ProductGridProps {
   products: any[];
@@ -9,12 +10,13 @@ interface ProductGridProps {
 
 function ProductCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-      <div className="aspect-[4/3] w-full bg-gray-100 animate-pulse" />
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div className="aspect-[4/3] w-full bg-gray-50 animate-pulse" />
       <div className="p-3 sm:p-4 space-y-2">
         <div className="h-3 w-16 rounded-sm bg-gray-100 animate-pulse" />
         <div className="h-4 w-3/4 rounded-sm bg-gray-100 animate-pulse" />
         <div className="h-3 w-1/2 rounded-sm bg-gray-100 animate-pulse" />
+        <div className="h-9 w-full rounded bg-gray-100 animate-pulse mt-3" />
       </div>
     </div>
   );
@@ -23,8 +25,8 @@ function ProductCardSkeleton() {
 export function ProductGrid({ products, loading, locale }: ProductGridProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
-        {Array.from({ length: 8 }).map((_, i) => (
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
+        {Array.from({ length: 12 }).map((_, i) => (
           <ProductCardSkeleton key={i} />
         ))}
       </div>
@@ -43,10 +45,20 @@ export function ProductGrid({ products, loading, locale }: ProductGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} locale={locale} />
-      ))}
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
+      {products.map((product, i) =>
+        i < 12 ? (
+          <AnimateOnScroll
+            key={product.id}
+            delay={Math.min(i * 50, 600)}
+            animation="fadeUp"
+          >
+            <ProductCard product={product} locale={locale} />
+          </AnimateOnScroll>
+        ) : (
+          <ProductCard key={product.id} product={product} locale={locale} />
+        )
+      )}
     </div>
   );
 }
