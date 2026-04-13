@@ -131,12 +131,12 @@ export default async function HomePage() {
                 {t("hero.subtitle")}
               </p>
               <div
-                className="mt-8 flex gap-4 flex-col sm:flex-row"
+                className="mt-8 flex gap-3 sm:gap-4 flex-col sm:flex-row"
                 style={{ animation: "fadeUp 600ms ease-out 600ms both" }}
               >
                 <Link
                   href="/products"
-                  className="bg-amber-500 text-navy-950 font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-sm hover:bg-amber-400 transition-colors text-center"
+                  className="bg-amber-500 text-navy-950 font-display font-semibold text-sm uppercase tracking-wide px-8 h-14 sm:h-auto sm:py-4 rounded-sm hover:bg-amber-400 transition-colors text-center flex items-center justify-center"
                 >
                   {t("hero.cta")}
                 </Link>
@@ -144,7 +144,7 @@ export default async function HomePage() {
                   href={formatWhatsAppUrl(WHATSAPP_NUMBER, "")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border border-white/20 text-white font-display font-semibold text-sm uppercase tracking-wide px-8 py-4 rounded-sm hover:bg-white/5 transition-colors text-center"
+                  className="border border-white/20 text-white font-display font-semibold text-sm uppercase tracking-wide px-8 h-14 sm:h-auto sm:py-4 rounded-sm hover:bg-white/5 transition-colors text-center flex items-center justify-center"
                 >
                   {t("hero.ctaWhatsApp")}
                 </a>

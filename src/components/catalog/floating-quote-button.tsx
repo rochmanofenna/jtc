@@ -40,7 +40,7 @@ export function FloatingQuoteButton() {
     <button
       type="button"
       onClick={() => open()}
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-[#0a0f1a] font-display font-bold text-sm uppercase tracking-wide px-5 py-3.5 rounded-lg shadow-[0_4px_20px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_30px_rgba(245,158,11,0.5)] transition-all duration-300 animate-in slide-in-from-bottom-4 fade-in"
+      className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-[#0a0f1a] font-display font-bold text-xs sm:text-sm uppercase tracking-wide px-4 py-3 sm:px-5 sm:py-3.5 rounded-lg shadow-[0_4px_20px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_30px_rgba(245,158,11,0.5)] transition-all duration-300 animate-in slide-in-from-bottom-4 fade-in"
     >
       <MessageCircle className="size-4" />
       {t("floating.getQuote")}
