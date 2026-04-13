@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Package } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { ProductImageFrame } from "@/components/catalog/product-image-frame";
 
 interface ProductImagesProps {
   images: Array<{ url: string; altText?: string }>;
@@ -16,9 +16,12 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-gray-100">
-        <Package className="size-16 text-gray-400/30" />
-      </div>
+      <ProductImageFrame
+        alt={productName}
+        aspectRatio="4/3"
+        size="lg"
+        className="rounded-lg"
+      />
     );
   }
 
@@ -26,8 +29,8 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
 
   return (
     <div className="space-y-3">
-      {/* Main image */}
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
+      {/* Main image — uses Framer Motion for cross-fade between images */}
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-50 border border-gray-100">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
@@ -35,16 +38,18 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0"
+            className="absolute inset-0 p-5 sm:p-8"
           >
-            <Image
-              src={activeImage.url}
-              alt={activeImage.altText || productName}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              priority
-            />
+            <div className="relative h-full w-full">
+              <Image
+                src={activeImage.url}
+                alt={activeImage.altText || productName}
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -57,7 +62,7 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
               key={index}
               onClick={() => setActiveIndex(index)}
               className={cn(
-                "relative h-16 w-16 shrink-0 overflow-hidden rounded-sm transition-all",
+                "relative h-16 w-16 shrink-0 overflow-hidden rounded-sm bg-gray-50 transition-all",
                 index === activeIndex
                   ? "ring-2 ring-amber-500"
                   : "ring-1 ring-gray-200 hover:ring-gray-300"
@@ -67,7 +72,7 @@ export function ProductImages({ images, productName }: ProductImagesProps) {
                 src={img.url}
                 alt={img.altText || `${productName} ${index + 1}`}
                 fill
-                className="object-cover"
+                className="object-contain p-1"
                 sizes="64px"
               />
             </button>

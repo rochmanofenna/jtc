@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight, Package } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useQuoteModal } from "@/context/quote-modal-provider";
+import { ProductImageFrame } from "@/components/catalog/product-image-frame";
 
 interface FeaturedProduct {
   id: string;
@@ -88,28 +88,21 @@ export function FeaturedCarousel({ products }: FeaturedCarouselProps) {
               key={product.id}
               className="shrink-0 snap-start w-[calc(66.666%-8px)] sm:w-[calc(33.333%-14px)] lg:w-[calc(25%-15px)]"
             >
-              <div className="overflow-hidden rounded-lg border border-gray-200 bg-white transition-all duration-200 hover:border-gray-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-0.5 h-full flex flex-col">
+              <div className="group overflow-hidden rounded-xl border border-gray-200/80 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 ease-out hover:border-gray-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 h-full flex flex-col">
                 {/* Image */}
                 <Link href={`/products/${product.slug}`} className="block">
-                  <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
-                    {product.imageUrl ? (
-                      <Image
-                        src={product.imageUrl}
-                        alt={product.name}
-                        fill
-                        className="object-contain transition-transform duration-300 hover:scale-105"
-                        sizes="(max-width: 640px) 66vw, (max-width: 1024px) 33vw, 25vw"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                        <Package className="size-10 text-gray-300" />
-                      </div>
-                    )}
-                  </div>
+                  <ProductImageFrame
+                    src={product.imageUrl}
+                    alt={product.name}
+                    aspectRatio="3/2"
+                    size="md"
+                    hoverScale
+                    className="rounded-none border-0 border-b border-gray-100"
+                  />
                 </Link>
 
                 {/* Content */}
-                <div className="p-3 sm:p-4 flex flex-col flex-1">
+                <div className="p-4 sm:p-5 flex flex-col flex-1">
                   {product.category && (
                     <p className="font-display text-[10px] font-semibold uppercase tracking-wide text-amber-600 mb-1.5">
                       {product.category.name}

@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Package } from "lucide-react";
 
 import { useQuoteModal } from "@/context/quote-modal-provider";
+import { ProductImageFrame } from "@/components/catalog/product-image-frame";
 
 interface ProductCardProps {
   product: any;
@@ -18,24 +17,17 @@ export function ProductCard({ product, locale }: ProductCardProps) {
 
   return (
     <Link href={`/products/${product.slug}`} className="group block">
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white transition-all duration-200 hover:border-gray-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] hover:-translate-y-0.5">
+      <div className="overflow-hidden rounded-xl border border-gray-200/80 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 ease-out hover:border-gray-300 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1.5 cursor-pointer">
 
-        {/* Image area — 4:3 aspect ratio */}
-        <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
-          {product.images?.[0]?.url ? (
-            <Image
-              src={product.images[0].url}
-              alt={product.name}
-              fill
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-              <Package className="size-10 text-gray-300" />
-            </div>
-          )}
-        </div>
+        {/* Standardized image frame */}
+        <ProductImageFrame
+          src={product.images?.[0]?.url}
+          alt={product.name}
+          aspectRatio="4/3"
+          size="md"
+          hoverScale
+          className="rounded-none border-0 border-b border-gray-100"
+        />
 
         {/* Content */}
         <div className="p-3 sm:p-4">
@@ -65,7 +57,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
             </p>
           )}
 
-          {/* Supplier / brand — separated by thin border */}
+          {/* Supplier / brand */}
           {(product.supplier?.name || product.brandName) && (
             <div className="mt-3 pt-2.5 border-t border-gray-100">
               <p className="font-display text-[10px] font-medium uppercase tracking-wide text-gray-500">
@@ -74,7 +66,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
             </div>
           )}
 
-          {/* CTA button */}
+          {/* CTA button with amber glow on card hover */}
           <button
             type="button"
             onClick={(e) => {
@@ -82,7 +74,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
               e.stopPropagation();
               open({ name: product.name, slug: product.slug });
             }}
-            className="mt-3 w-full py-2 px-3 bg-amber-500 hover:bg-amber-400 text-[#0a0f1a] text-xs font-display font-semibold uppercase tracking-wide rounded transition-colors duration-200"
+            className="mt-3 w-full py-2 px-3 bg-amber-500 text-[#0a0f1a] text-xs font-display font-semibold uppercase tracking-wide rounded transition-all duration-300 group-hover:bg-amber-400 group-hover:shadow-[0_4px_12px_rgba(245,158,11,0.3)]"
           >
             {t("getQuote")}
           </button>
