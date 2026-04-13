@@ -21,7 +21,25 @@
     "confirm": "Konfirmasi",
     "yes": "Ya",
     "no": "Tidak",
-    "all": "Semua"
+    "all": "Semua",
+    "product": "produk",
+    "products": "produk",
+    "category": "kategori",
+    "categories": "kategori",
+    "found": "ditemukan",
+    "across": "di",
+    "noProductsFound": "Tidak ada produk ditemukan",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya",
+    "backTo": "Kembali ke",
+    "viewAllProducts": "Lihat Semua Produk",
+    "china": "Tiongkok",
+    "indonesia": "Indonesia",
+    "verifiedSuppliers": "Pemasok Terverifikasi",
+    "backToTop": "Kembali ke atas",
+    "closeMenu": "Tutup menu",
+    "scrollLeft": "Geser kiri",
+    "scrollRight": "Geser kanan"
   },
   "nav": {
     "home": "Beranda",
@@ -183,7 +201,10 @@
     "quickLinks": "Tautan Cepat",
     "contactUs": "Hubungi Kami",
     "copyright": "© 2026 Jakarta Trade Connect. Hak cipta dilindungi.",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "products": "Produk",
+    "contact": "Kontak",
+    "location": "Jakarta, Indonesia"
   },
   "404": {
     "title": "Halaman Tidak Ditemukan",

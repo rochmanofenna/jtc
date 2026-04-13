@@ -21,7 +21,25 @@
     "confirm": "确认",
     "yes": "是",
     "no": "否",
-    "all": "全部"
+    "all": "全部",
+    "product": "个产品",
+    "products": "个产品",
+    "category": "个分类",
+    "categories": "个分类",
+    "found": "找到",
+    "across": "跨",
+    "noProductsFound": "未找到产品",
+    "previous": "上一页",
+    "next": "下一页",
+    "backTo": "返回",
+    "viewAllProducts": "查看所有产品",
+    "china": "中国",
+    "indonesia": "印尼",
+    "verifiedSuppliers": "已验证供应商",
+    "backToTop": "回到顶部",
+    "closeMenu": "关闭菜单",
+    "scrollLeft": "向左滑动",
+    "scrollRight": "向右滑动"
   },
   "nav": {
     "home": "首页",
@@ -183,7 +201,10 @@
     "quickLinks": "快速链接",
     "contactUs": "联系我们",
     "copyright": "© 2026 雅加达贸易通。保留所有权利。",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "products": "产品",
+    "contact": "联系方式",
+    "location": "雅加达，印尼"
   },
   "404": {
     "title": "页面未找到",

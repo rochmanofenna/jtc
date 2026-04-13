@@ -77,12 +77,12 @@ export async function SuperCategoryCard({
         <div className="mt-6 flex items-center gap-4 font-mono text-xs text-gray-500">
           <span>
             <span className="text-amber-600 font-semibold">{productCount}</span>{" "}
-            {productCount === 1 ? "product" : "products"}
+            {t("common.products" as never)}
           </span>
           <span className="w-px h-3 bg-gray-300" aria-hidden="true" />
           <span>
             <span className="text-gray-700 font-semibold">{subcategoryCount}</span>{" "}
-            {subcategoryCount === 1 ? "category" : "categories"}
+            {t("common.categories" as never)}
           </span>
         </div>
 

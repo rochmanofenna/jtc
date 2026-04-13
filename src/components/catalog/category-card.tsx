@@ -1,13 +1,15 @@
 import Link from "next/link";
+import { getLocale, getTranslations } from "next-intl/server";
 import { getIcon } from "@/lib/icons";
 
 interface CategoryCardProps {
   category: any;
   productCount?: number;
-  locale?: string;
 }
 
-export function CategoryCard({ category, productCount, locale }: CategoryCardProps) {
+export async function CategoryCard({ category, productCount }: CategoryCardProps) {
+  const locale = await getLocale();
+  const t = await getTranslations("common");
   const Icon = getIcon(category.icon);
   const count = productCount ?? category._count?.products ?? 0;
 
@@ -21,7 +23,7 @@ export function CategoryCard({ category, productCount, locale }: CategoryCardPro
           {locale === "cn" && category.nameCn ? category.nameCn : category.name}
         </h3>
         <p className="text-xs text-muted-foreground">
-          {count} {count === 1 ? "product" : "products"}
+          {count} {t("products")}
         </p>
       </div>
     </Link>

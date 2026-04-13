@@ -164,8 +164,8 @@ export default async function CategoryPage({
         )}
         <p className="text-sm text-muted-foreground">
           {hasChildren
-            ? `${totalCount} ${totalCount === 1 ? "product" : "products"} across ${childrenWithCounts.length} ${childrenWithCounts.length === 1 ? "category" : "categories"}`
-            : `${totalCount} ${totalCount === 1 ? "product" : "products"} found`}
+            ? `${totalCount} ${t("common.products")} ${t("common.across")} ${childrenWithCounts.length} ${t("common.categories")}`
+            : `${totalCount} ${t("common.products")} ${t("common.found")}`}
         </p>
       </div>
 
@@ -195,12 +195,12 @@ export default async function CategoryPage({
                   render={<Link href={pageUrl(pageNum - 1)} />}
                 >
                   <ChevronLeft className="size-4" />
-                  Previous
+                  {t("common.previous")}
                 </Button>
               ) : (
                 <Button variant="outline" size="sm" disabled>
                   <ChevronLeft className="size-4" />
-                  Previous
+                  {t("common.previous")}
                 </Button>
               )}
 
@@ -248,12 +248,12 @@ export default async function CategoryPage({
                   size="sm"
                   render={<Link href={pageUrl(pageNum + 1)} />}
                 >
-                  Next
+                  {t("common.next")}
                   <ChevronRight className="size-4" />
                 </Button>
               ) : (
                 <Button variant="outline" size="sm" disabled>
-                  Next
+                  {t("common.next")}
                   <ChevronRight className="size-4" />
                 </Button>
               )}

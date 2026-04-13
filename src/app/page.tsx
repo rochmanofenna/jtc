@@ -179,7 +179,7 @@ export default async function HomePage() {
           <div className="container-wide">
             <AnimateOnScroll>
               <span className="font-display font-semibold text-xs uppercase tracking-[0.15em] text-amber-500">
-                WHY WORK WITH US
+                {t("whyUs.title")}
               </span>
               <div className="w-10 h-0.5 bg-amber-500 mt-2 mb-8" />
             </AnimateOnScroll>

@@ -21,7 +21,25 @@
     "confirm": "Confirm",
     "yes": "Yes",
     "no": "No",
-    "all": "All"
+    "all": "All",
+    "product": "product",
+    "products": "products",
+    "category": "category",
+    "categories": "categories",
+    "found": "found",
+    "across": "across",
+    "noProductsFound": "No products found",
+    "previous": "Previous",
+    "next": "Next",
+    "backTo": "Back to",
+    "viewAllProducts": "View All Products",
+    "china": "China",
+    "indonesia": "Indonesia",
+    "verifiedSuppliers": "Verified Suppliers",
+    "backToTop": "Back to top",
+    "closeMenu": "Close menu",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right"
   },
   "nav": {
     "home": "Home",
@@ -183,7 +201,10 @@
     "quickLinks": "Quick Links",
     "contactUs": "Contact Us",
     "copyright": "© 2026 Jakarta Trade Connect. All rights reserved.",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "products": "Products",
+    "contact": "Contact",
+    "location": "Jakarta, Indonesia"
   },
   "404": {
     "title": "Page Not Found",

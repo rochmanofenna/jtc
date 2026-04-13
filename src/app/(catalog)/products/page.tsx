@@ -133,7 +133,7 @@ export default async function ProductsPage({
               : t("nav.products")}
         </h1>
         <p className="font-body text-sm text-gray-500">
-          {totalCount} {totalCount === 1 ? "product" : "products"} found
+          {totalCount} {t("common.products")} {t("common.found")}
         </p>
       </div>
 
@@ -226,12 +226,12 @@ export default async function ProductsPage({
                   className="inline-flex items-center gap-1 px-3 py-2 font-display text-sm text-gray-500 hover:text-gray-900 transition-colors"
                 >
                   <ChevronLeft className="size-4" />
-                  Previous
+                  {t("common.previous")}
                 </Link>
               ) : (
                 <span className="inline-flex items-center gap-1 px-3 py-2 font-display text-sm text-gray-300 cursor-not-allowed">
                   <ChevronLeft className="size-4" />
-                  Previous
+                  {t("common.previous")}
                 </span>
               )}
 
@@ -280,12 +280,12 @@ export default async function ProductsPage({
                   href={buildUrl({ page: String(pageNum + 1) })}
                   className="inline-flex items-center gap-1 px-3 py-2 font-display text-sm text-gray-500 hover:text-gray-900 transition-colors"
                 >
-                  Next
+                  {t("common.next")}
                   <ChevronRight className="size-4" />
                 </Link>
               ) : (
                 <span className="inline-flex items-center gap-1 px-3 py-2 font-display text-sm text-gray-300 cursor-not-allowed">
-                  Next
+                  {t("common.next")}
                   <ChevronRight className="size-4" />
                 </span>
               )}

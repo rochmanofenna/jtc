@@ -1,4 +1,7 @@
+"use client";
+
 import { SearchX } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ProductCard } from "@/components/catalog/product-card";
 import { AnimateOnScroll } from "@/components/ui/animate-on-scroll";
 
@@ -23,6 +26,7 @@ function ProductCardSkeleton() {
 }
 
 export function ProductGrid({ products, loading, locale }: ProductGridProps) {
+  const t = useTranslations("common");
   if (loading) {
     return (
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
@@ -38,7 +42,7 @@ export function ProductGrid({ products, loading, locale }: ProductGridProps) {
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <SearchX className="mb-4 size-12 text-gray-400/40" />
         <p className="font-display text-lg font-medium text-gray-500">
-          No products found
+          {t("noProductsFound")}
         </p>
       </div>
     );

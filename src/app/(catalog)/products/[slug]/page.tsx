@@ -117,7 +117,7 @@ export default async function ProductDetailPage({
           href={`/categories/${product.category.slug}`}
           className="font-body text-sm text-gray-500 transition-colors hover:text-gray-900"
         >
-          &larr; Back to {product.category.name}
+          &larr; {t("common.backTo")} {product.category.name}
         </Link>
       </nav>
 
@@ -238,7 +238,7 @@ export default async function ProductDetailPage({
               {product.supplier.name}
               {product.supplier.country && (
                 <span className="text-gray-400 ml-1.5">
-                  {product.supplier.country === "CN" ? "China" : "Indonesia"}
+                  {product.supplier.country === "CN" ? t("common.china") : t("common.indonesia")}
                 </span>
               )}
             </p>
