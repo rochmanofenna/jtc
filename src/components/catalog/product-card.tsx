@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Package } from "lucide-react";
 
 import { useQuoteModal } from "@/context/quote-modal-provider";
 
@@ -30,7 +31,9 @@ export function ProductCard({ product, locale }: ProductCardProps) {
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           ) : (
-            <div className="absolute inset-0 bg-gray-100" />
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <Package className="size-10 text-gray-300" />
+            </div>
           )}
         </div>
 
