@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { useQuoteModal } from "@/context/quote-modal-provider";
 import { ProductImageFrame } from "@/components/catalog/product-image-frame";
+import { getCategoryLabelColor } from "@/lib/category-colors";
 
 interface ProductCardProps {
   product: any;
@@ -31,9 +32,9 @@ export function ProductCard({ product, locale }: ProductCardProps) {
 
         {/* Content */}
         <div className="p-3 sm:p-4">
-          {/* Category label */}
+          {/* Category label — color-coded by super category */}
           {product.category?.name && (
-            <p className="font-display text-[10px] font-semibold uppercase tracking-wide text-amber-600 mb-1.5">
+            <p className={`font-display text-[10px] font-semibold uppercase tracking-wide mb-1.5 ${getCategoryLabelColor(product.category.slug)}`}>
               {product.category.name}
             </p>
           )}
