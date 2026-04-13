@@ -5,6 +5,8 @@ import { getLocale, getMessages } from "next-intl/server";
 import { Toaster } from "@/components/ui/sonner";
 import { QuoteModalProvider } from "@/context/quote-modal-provider";
 import { FloatingQuoteButton } from "@/components/catalog/floating-quote-button";
+import { ScrollProgress } from "@/components/layout/scroll-progress";
+import { BackToTop } from "@/components/layout/back-to-top";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -63,8 +65,10 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col font-body">
         <NextIntlClientProvider messages={messages}>
           <QuoteModalProvider>
+            <ScrollProgress />
             {children}
             <FloatingQuoteButton />
+            <BackToTop />
           </QuoteModalProvider>
           <Toaster position="top-right" />
         </NextIntlClientProvider>

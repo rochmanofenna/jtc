@@ -73,8 +73,10 @@ export function Header({ categoryMenu }: HeaderProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-navy-900 text-white transition-shadow duration-200 ${
-        scrolled ? "shadow-[0_1px_0_rgba(255,255,255,0.05)]" : ""
+      className={`sticky top-0 z-50 text-white transition-all duration-300 ${
+        scrolled
+          ? "bg-navy-950 shadow-lg backdrop-blur-none"
+          : "bg-navy-900/95 backdrop-blur-md"
       }`}
     >
       <div className="container-wide flex h-16 items-center gap-6 lg:h-[72px]">
